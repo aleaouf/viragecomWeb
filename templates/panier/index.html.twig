@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panier index{% endblock %}
+
+{% block body %}
+<section class="breadcrumbs">
+    <div class="container">
+        <h1>Panier index</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>IdPanier</th>
+                    <th>IdUser</th>
+                    <th>NbrArticle</th>
+                    <th>IdArticle</th>
+                    <th>Image</th> <!-- Nouvelle colonne pour l'image -->
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for panier in paniers %}
+                <tr>
+                    <td>{{ panier.idPanier }}</td>
+                    <td>{{ panier.idUser }}</td>
+                    <td>{{ panier.nbrArticle }}</td>
+                    <td>{{ panier.idArticle }}</td>
+                    <td>
+                        {% set article = articles[panier.idPanier] %}
+                        {% if article %}
+                            <img src="../uploads/{{ article.image }}" alt="{{ article.nom }}" class="img-fluid" width="100">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_panier_show', {'idPanier': panier.idPanier}) }}">Afficher</a>
+                        <a href="{{ path('app_panier_edit', {'idPanier': panier.idPanier}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Aucun enregistrement trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        
+    </div>
+</section>
+{% endblock %}
