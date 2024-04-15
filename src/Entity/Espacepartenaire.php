@@ -1,9 +1,9 @@
-
 <?php
 
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Espacepartenaire
@@ -27,12 +27,17 @@ class Espacepartenaire
      *
      * @ORM\Column(name="id_user", type="integer", nullable=false, options={"default"="2"})
      */
-    private $idUser = 2;
+    private $idUser = 25;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255, nullable=false)
+          * @Assert\NotBlank
+      * @Assert\Regex(
+     *     pattern="/^[a-zA-Z0-9 ]+$/",
+     *     message="L'adresse ne doit contenir que des lettres, des chiffres et des espaces."
+     * )
      */
     private $nom;
 
@@ -40,26 +45,30 @@ class Espacepartenaire
      * @var string
      *
      * @ORM\Column(name="localisation", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z0-9 ]+$/",
+     *     message="L'adresse ne doit contenir que des lettres, des chiffres et des espaces."
+     * )
      */
     private $localisation;
 
     /**
      * @var string
-     *
+          * @Assert\NotBlank
      * @ORM\Column(name="type", type="string", length=255, nullable=false)
      */
     private $type;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="photos", type="string", length=255, nullable=false)
      */
     private $photos;
 
     /**
      * @var string
-     *
+          * @Assert\NotBlank
      * @ORM\Column(name="description", type="string", length=255, nullable=false)
      */
     private $description;
@@ -197,6 +206,25 @@ class Espacepartenaire
 
         return $this;
     }
+/**
+ * @ORM\ManyToOne(targetEntity="App\Entity\Categorie", cascade={"persist"})
+ * @ORM\JoinColumn(name="id_categorie", referencedColumnName="id_categorie")
+ */
+private $categorie;
 
+
+    // Other methods...
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): self
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
 
 }

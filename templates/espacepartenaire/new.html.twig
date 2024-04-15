@@ -1,0 +1,11 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block title %}New Espace partenaire{% endblock %}
+
+{% block body %}
+    <h1>Create new Espacepartenaire</h1>
+
+    {{ include('Espacepartenaire/_form.html.twig') }}
+
+    <a href="{{ path('app_espacepartenaire_index') }}">back to list</a>
+{% endblock %}

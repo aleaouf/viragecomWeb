@@ -1,0 +1,39 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block title %}Espacepartenaire index{% endblock %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="main">
+            <div class="inner">
+                <!-- Services -->
+                <section class="services">
+                    <div class="container-fluid">
+                        <div class="row">
+                            {% for espacepartenaire in acceptedEspacepartenaires %}
+                                <div class="col-md-4">
+                                    <div class="service-item">
+                                        <h4>{{ espacepartenaire.nom }}</h4>
+                                        <p>{{ espacepartenaire.localisation }}</p>
+                                        <p>{{ espacepartenaire.type }}</p>
+                                        {% if espacepartenaire.photos %}
+                                            <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" alt="">
+                                        {% endif %}
+                                        <p>{{ espacepartenaire.description }}</p>
+                                        <div class="actions">
+                                            <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}">show</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col-md-12">
+                                    <p>no records found</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock %}
