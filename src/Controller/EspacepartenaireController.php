@@ -61,7 +61,7 @@ class EspacepartenaireController extends AbstractController
             $entityManager->persist($espacepartenaire);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_espacepartenaire_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_espacepartenaire_show_accepted', [], Response::HTTP_SEE_OTHER);
         }
     
         return $this->renderForm('espacepartenaire/new.html.twig', [
@@ -126,7 +126,7 @@ class EspacepartenaireController extends AbstractController
         return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/', name: 'app_espacepartenaire_index', methods: ['GET'])]
+    #[Route('/Admin', name: 'app_espacepartenaire_index', methods: ['GET'])]
     public function indexEspacepartenaire(EspacepartenaireRepository $espacepartenaireRepository): Response
     {
         return $this->render('espacepartenaire/index.html.twig', [
