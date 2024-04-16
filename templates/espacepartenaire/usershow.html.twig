@@ -1,8 +1,9 @@
-{% extends 'base.backoffice.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Espacepartenaire{% endblock %}
 
 {% block body %}
+<div style="padding-top: 200px" class="container">
     <h1>Espacepartenaire</h1>
 
     <table class="table">
@@ -68,5 +69,5 @@
     {% endif %}
     <a href="{{ path('app_espacepartenaire_show_accepted') }}">back to list</a>
 
-
+<div>
 {% endblock %}

@@ -1,8 +1,9 @@
-{% extends 'base.backoffice.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Espacepartenaire index{% endblock %}
 
 {% block body %}
+<div style="padding-top: 200px" class="container">
     <div id="wrapper">
         <div id="main">
             <div class="inner">
@@ -38,7 +39,8 @@
     </div>
 
     <!-- "I'm a Partner" button -->
-    <div style="position: fixed; top: 80px; right: 30px;">
+    <div style="position: fixed; top: 200px; right: 30px;">
         <a href="{{ path('app_espacepartenaire_show_user', {'userId': 25}) }}" class="btn btn-primary">I'm a Partner</a>
     </div>
+    <div>
 {% endblock %}
