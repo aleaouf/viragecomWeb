@@ -27,7 +27,7 @@
                                             <tr>
                                                 <td>{{ espacepartenaire.nom }}</td>
                                                 <td>{{ espacepartenaire.localisation }}</td>
-                                                <td>{{ espacepartenaire.type }}</td>
+                                                <td>{{ espacepartenaire.getIdType.nomtype }}</td>
                                                 <td>{{ espacepartenaire.description }}</td>
                                                 <td>
                                                     <a href="{{ path('app_espacepartenaire_show', {'idEspace': espacepartenaire.idEspace}) }}">show</a>

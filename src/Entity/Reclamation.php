@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Entity;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -8,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Reclamation
  *
  * @ORM\Table(name="reclamation")
- * @ORM\Entity(repositoryClass=App\Repository\ReclamationRepository::class)
+ * @ORM\Entity
  */
 class Reclamation
 {

@@ -3,21 +3,29 @@
 namespace App\Controller;
 
 use App\Entity\Categorie;
+use App\Entity\Type;
 use App\Entity\Espacepartenaire;
 use App\Form\CategorieType;
 use App\Form\EspacepartenaireType;
+use App\Form\TypeType;
 use App\Repository\CategorieRepository;
 use App\Repository\EspacepartenaireRepository;
+use App\Repository\TypeRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 #[Route('/espacepartenaire')]
 class EspacepartenaireController extends AbstractController
 {
+    
+    
     #[Route('/notreEspace', name: 'app_espacepartenaire_show_accepted', methods: ['GET'])]
     public function showAcceptedEspacepartenaires(EspacepartenaireRepository $espacepartenaireRepository): Response
     {
@@ -35,6 +43,7 @@ class EspacepartenaireController extends AbstractController
         $categorie = new Categorie();
     
         $form = $this->createFormBuilder(['espacepartenaire' => $espacepartenaire, 'categorie' => $categorie])
+        
             ->add('espacepartenaire', EspacepartenaireType::class)
             ->add('categorie', CategorieType::class)
             ->add('save', SubmitType::class, ['label' => 'Create Espacepartenaire'])
@@ -69,62 +78,7 @@ class EspacepartenaireController extends AbstractController
         ]);
     }
 
-    #[Route('/categorie/new', name: 'app_categorie_new', methods: ['GET', 'POST'])]
-    public function newCategorie(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $categorie = new Categorie();
-        $form = $this->createForm(CategorieType::class, $categorie);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($categorie);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('categorie/new.html.twig', [
-            'categorie' => $categorie,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/categorie/{idCategorie}', name: 'app_categorie_show', methods: ['GET'])]
-    public function showCategorie(Categorie $categorie): Response
-    {
-        return $this->render('categorie/show.html.twig', [
-            'categorie' => $categorie,
-        ]);
-    }
-
-    #[Route('/categorie/{idCategorie}/edit', name: 'app_categorie_edit', methods: ['GET', 'POST'])]
-    public function editCategorie(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(CategorieType::class, $categorie);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('categorie/edit.html.twig', [
-            'categorie' => $categorie,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/categorie/{idCategorie}', name: 'app_categorie_delete', methods: ['POST'])]
-    public function deleteCategorie(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$categorie->getIdCategorie(), $request->request->get('_token'))) {
-            $entityManager->remove($categorie);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
-    }
+ 
 
     #[Route('/Admin', name: 'app_espacepartenaire_index', methods: ['GET'])]
     public function indexEspacepartenaire(EspacepartenaireRepository $espacepartenaireRepository): Response
@@ -175,7 +129,7 @@ class EspacepartenaireController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_espacepartenaire_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_espacepartenaire_show_accepted', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('espacepartenaire/edit.html.twig', [
@@ -227,12 +181,5 @@ class EspacepartenaireController extends AbstractController
         ]);
     }
 
-    #[Route('/categorie', name: 'app_categorie_index', methods: ['GET'])]
-    public function index(CategorieRepository $categorieRepository): Response
-    {
-        return $this->render('categorie/index.html.twig', [
-            'categories' => $categorieRepository->findAll(),
-        ]);
-    }
-  
+ 
 }

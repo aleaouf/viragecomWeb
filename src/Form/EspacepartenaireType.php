@@ -5,6 +5,9 @@ namespace App\Form;
 use App\Entity\Espacepartenaire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\TypeType;
+use App\Entity\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,22 +20,7 @@ class EspacepartenaireType extends AbstractType
         $builder
             ->add('nom')
             ->add('localisation')
-            ->add('type', ChoiceType::class, [
-                'label' => 'Type',
-                'choices' => [
-                    'Salon de thé' => 'Salon de thé',
-                    'Restaurant' => 'Restaurant',
-                    'Resto Bar' => 'Resto Bar',
-                    'Espace ouvert' => 'Espace ouvert',
-                    'Cafeteria' => 'Cafeteria',
-                    'Terrain Foot' => 'Terrain Foot',
-                    'Salle de jeux' => 'Salle de jeux',
-                    'Café Lounge' => 'Café Lounge',
-                ],
-                // Optional: Render as a select dropdown
-                'expanded' => false,
-                'multiple' => false,
-            ])
+           
             // Use FileType for file uploads
             ->add('photos', FileType::class, [
                 'label' => 'Image (JPG, PNG, JPEG)',
@@ -40,7 +28,13 @@ class EspacepartenaireType extends AbstractType
                 'required' => false,
             ])
             
-            ->add('description');
+            ->add('description')
+            ->add('id_type', EntityType::class, [
+                'label' => 'Type',
+                'class' => Type::class,
+                'choice_label' => 'nomType', // Display typenom in the dropdown
+                'placeholder' => 'Choose a Type', // Optional placeholder
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

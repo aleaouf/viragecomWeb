@@ -16,7 +16,7 @@
                                     <div class="service-item">
                                         <h4>{{ espacepartenaire.nom }}</h4>
                                         <p>{{ espacepartenaire.localisation }}</p>
-                                        <p>{{ espacepartenaire.type }}</p>
+                                        <p>{{ espacepartenaire.getIdType.nomtype }}</p>
                                         {% if espacepartenaire.photos %}
                                             <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" alt="">
                                         {% endif %}
