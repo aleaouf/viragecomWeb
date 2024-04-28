@@ -1,70 +1,49 @@
-{% extends 'base.html.twig' %}
+    {% extends 'base.html.twig' %}
 
-{% block title %}Espacepartenaire index{% endblock %}
+    {% block title %}Espacepartenaire index{% endblock %}
 
-{% block body %}
-<div style="padding-top: 200px" class="container">
-    <div id="wrapper">
-        <div id="main">
-            <div class="inner">
-                <!-- Services -->
-                <section class="services">
-                    <div class="container-fluid">
-                        <div class="row">
-                            {% for espacepartenaire in acceptedEspacepartenaires %}
-                                <div class="col-md-4">
-                                    <div class="service-item">
-                                        <h4>{{ espacepartenaire.nom }}</h4>
-                                        <p>{{ espacepartenaire.localisation }}</p>
-                                        <p>{{ espacepartenaire.getIdType.nomtype }}</p>
-                                        {% if espacepartenaire.photos %}
-                                            <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" alt="">
-                                        {% endif %}
-                                        <p>{{ espacepartenaire.description }}</p>
-                                        <div class="actions">
-                                            <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}">show</a>
+    {% block body %}
+    <div style="padding-top: 200px" class="container">
+        <div id="wrapper">
+            <div id="main">
+                <div class="inner">
+                    <!-- Services -->
+                    <section class="services">
+                        <div class="container-fluid">
+                            <div class="row">
+                                {% for espacepartenaire in acceptedEspacepartenaires %}
+                                    <div class="col-md-4">
+                                        <div class="service-item">
+                                            <h4>{{ espacepartenaire.nom }}</h4>
+                                            <p>{{ espacepartenaire.localisation }}</p>
+                                            <p>{{ espacepartenaire.getIdType.nomtype }}</p>
+                                            {% if espacepartenaire.photos %}
+                                                <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" alt="">
+                                            {% endif %}
+                                            <p>{{ espacepartenaire.description }}</p>
+                                            <div class="actions">
+                                                <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}">show</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
         </div>
+
+        <!-- "I'm a Partner" button -->
+        <div style="position: fixed; top: 200px; right: 30px;">
+            <a href="{{ path('app_espacepartenaire_show_user', {'userId': 25}) }}" class="btn btn-primary">I'm a Partner</a>
+        </div>
+        <!-- Search input -->
+        <div style="position: fixed; top: 200px; left: 30px;">
+            <form action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
+                <input type="text" name="query" placeholder="Search by name or type..." value="{{ app.request.get('query') }}">
+                <button type="submit">Search</button>
+            </form>
+        </div>
     </div>
-
-    <!-- "I'm a Partner" button -->
-    <div style="position: fixed; top: 200px; right: 30px;">
-        <a href="{{ path('app_espacepartenaire_show_user', {'userId': 25}) }}" class="btn btn-primary">I'm a Partner</a>
-    </div>
-    <!-- Search input -->
-    <div style="position: fixed; top: 200px; left: 30px;">
-        <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="searchEspacepartenaire()">
-    </div>
-</div>
-
-<script>
-function searchEspacepartenaire() {
-    // Declare variables
-    var input, filter, serviceItems, item, itemName, i;
-    input = document.getElementById("searchInput");
-    filter = input.value.toUpperCase();
-    serviceItems = document.getElementsByClassName("service-item");
-
-    // Loop through all service items and hide/show based on the search query
-    for (i = 0; i < serviceItems.length; i++) {
-        item = serviceItems[i];
-        itemName = item.getElementsByTagName("h4")[0]; // Assuming h4 contains the name
-        if (itemName) {
-            if (itemName.textContent.toUpperCase().indexOf(filter) > -1) {
-                item.style.display = "";
-            } else {
-                item.style.display = "none";
-            }
-        }
-    }
-}
-</script>
-
-{% endblock %}
+    {% endblock %}

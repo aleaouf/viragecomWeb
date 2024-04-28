@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use App\Entity\Categorie;
 use App\Entity\Type;
@@ -27,14 +28,21 @@ class EspacepartenaireController extends AbstractController
     
     
     #[Route('/notreEspace', name: 'app_espacepartenaire_show_accepted', methods: ['GET'])]
-    public function showAcceptedEspacepartenaires(EspacepartenaireRepository $espacepartenaireRepository): Response
+    public function showAcceptedEspacepartenaires(Request $request, EspacepartenaireRepository $espacepartenaireRepository): Response
     {
-        $acceptedEspacepartenaires = $espacepartenaireRepository->findBy(['accepted' => true]);
-    
+        $query = $request->query->get('query');
+        $acceptedEspacepartenaires = [];
+
+        if ($query) {
+            $acceptedEspacepartenaires = $espacepartenaireRepository->searchAcceptedByNameOrType($query);
+        } else {
+            $acceptedEspacepartenaires = $espacepartenaireRepository->findBy(['accepted' => true]);
+        }
+
         return $this->render('espacepartenaire/show_accepted.html.twig', [
             'acceptedEspacepartenaires' => $acceptedEspacepartenaires,
         ]);
-    } 
+    }
 
     #[Route('/new', name: 'app_new_espacepartenaire', methods: ['GET', 'POST'])]
     public function newEspacepartenaire(Request $request, EntityManagerInterface $entityManager): Response
