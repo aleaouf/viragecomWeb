@@ -46,6 +46,24 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
             ->getQuery()
             ->getResult();
     }
+    public function countByAgeRange(int $minAge, int $maxAge): int
+{
+    // Utiliser un QueryBuilder pour compter les utilisateurs dont l'âge est compris dans la plage spécifiée
+    return $this->createQueryBuilder('u')
+        ->select('count(u.id)')
+        ->where('u.age >= :minAge')
+        ->andWhere('u.age <= :maxAge')
+        ->setParameter('minAge', $minAge)
+        ->setParameter('maxAge', $maxAge)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+public function findBannedUsers(): array
+{
+    return $this->findBy(['banned' => true]);
+}
+
+
 
 //    /**
 //     * @return Utilisateur[] Returns an array of Utilisateur objects

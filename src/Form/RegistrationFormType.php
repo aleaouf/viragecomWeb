@@ -9,13 +9,15 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+
 
 class RegistrationFormType extends AbstractType
 {
@@ -44,16 +46,16 @@ class RegistrationFormType extends AbstractType
                     new NotBlank(['message' => 'Please enter your first name'])
                 ],
             ])
-            ->add('email', EmailType::class, [
-                'label' => false,
-                'attr' => [
-                    'autocomplete' => 'email',
-                    'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
-                    'placeholder' => 'Email'
-                ],
+            ->add('email', TextType::class, [
                 'constraints' => [
-                    new NotBlank(['message' => 'Please enter your email']),
-                    new Email(['message' => 'The email "{{ value }}" is not a valid email.']),
+                    new NotBlank(),
+                    new Email([
+                        'message' => 'Please enter a valid email address.',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^.+@.+\..+$/',
+                        'message' => 'Email must be in the format "#@#.#"',
+                    ]),
                 ],
             ])
             ->add('age', IntegerType::class, [
