@@ -1,0 +1,86 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block title %}Espacepartenaire{% endblock %}
+
+{% block body %}
+    <h1>Espacepartenaire</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdEspace</th>
+                <td>{{ espacepartenaire.idEspace }}</td>
+            </tr>
+            <tr>
+                <th>IdUser</th>
+                <td>{{ espacepartenaire.idUser }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ espacepartenaire.nom }}</td>
+            </tr>
+            <tr>
+                <th>Localisation</th>
+                <td>{{ espacepartenaire.localisation }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ espacepartenaire.getIdType.nomtype }}</td>
+            </tr>
+            <tr>
+                <th>Photos</th>
+<td>
+                                                    {% if espacepartenaire.photos %}
+                                                        <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" alt="">
+                                                    {% endif %}
+                                                </td>            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ espacepartenaire.description }}</td>
+            </tr>
+           {% if espacepartenaire.getCategorie() %}
+                <tr>
+                    <th>Categorie</th>
+                    <td>
+                        {% if espacepartenaire.getCategorie().isEspacecouvert() %}
+                            Espace Couvert
+                        {% endif %}
+                        {% if espacepartenaire.getCategorie().isEspaceenfants() %}
+                            Espace Enfants
+                        {% endif %}
+                        {% if espacepartenaire.getCategorie().isEspacefumeur() %}
+                            Espace Fumeur
+                        {% endif %}
+                        {% if espacepartenaire.getCategorie().isServicerestauration() %}
+                            Service Restauration
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th>Categorie</th>
+                    <td>No Category</td>
+                </tr>
+            {% endif %}
+            
+            <tr>
+                <th>Accepted</th>
+                <td>{{ espacepartenaire.accepted ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Nbclick</th>
+                <td>{{ espacepartenaire.nbclick }}</td>
+            </tr>
+        </tbody>
+    </table>
+ <!-- Button to accept Espacepartenaire -->
+    {% if not espacepartenaire.accepted %}
+        <form action="{{ path('app_espacepartenaire_accept', {'idEspace': espacepartenaire.idEspace}) }}" method="POST">
+            <button type="submit">Accept</button>
+        </form>
+    {% endif %}
+    <a href="{{ path('app_espacepartenaire_index') }}">back to list</a>
+
+
+    {{ include('espacepartenaire/_delete_form.html.twig') }}
+{% endblock %}

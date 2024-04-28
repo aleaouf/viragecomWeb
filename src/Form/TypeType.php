@@ -12,9 +12,9 @@ class TypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-   ->add('nomtype', null, [
-                'label' => "Type d'espace partenaire" // Change the label for nomtype field
-            ])        ;
+        ->add('nomtype', null, [
+            'label' => "Type d'espace partenaire" // Change the label for nomtype field
+        ])        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

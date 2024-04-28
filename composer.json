@@ -4,14 +4,14 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": "8.2.4",
+        "php": ">=8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^2.0",
-        "doctrine/dbal": "^3.8",
+        "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^3.0",
+        "doctrine/orm": "^2.9",
         "dompdf/dompdf": "^2.0",
         "endroid/qr-code-bundle": "^5.0",
         "knplabs/knp-paginator-bundle": "*",
@@ -52,6 +52,7 @@
         "symfonycasts/verify-email-bundle": "^1.16",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
+        "twilio/sdk": "^8.0",
         "vich/uploader-bundle": "^2.3"
     },
     "config": {
@@ -70,7 +71,9 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Doctrine\\ORM\\Mapping\\": "vendor/doctrine/orm/lib/Doctrine/ORM/Mapping",
+            "Vich\\UploaderBundle\\Metadata\\Driver\\": "vendor/vich/uploader-bundle/src/Metadata/Driver"
         }
     },
     "autoload-dev": {

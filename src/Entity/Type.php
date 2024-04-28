@@ -24,26 +24,24 @@ class Type
     /**
      * @var string
      *
-     * @ORM\Column(name="nomType", type="int", length=255, nullable=false)
+     * @ORM\Column(name="nomType", type="string", length=255, nullable=false)
      */
-    private $nomtype;
+    private $nomType; // Corrected property name to match database column
 
     public function getIdType(): ?int
     {
         return $this->idType;
     }
 
-    public function getNomtype(): ?string
+    public function getNomType(): ?string
     {
-        return $this->nomtype;
+        return $this->nomType;
     }
 
-    public function setNomtype(string $nomtype): static
+    public function setNomType(string $nomType): self
     {
-        $this->nomtype = $nomtype;
+        $this->nomType = $nomType;
 
         return $this;
     }
-
-
 }
