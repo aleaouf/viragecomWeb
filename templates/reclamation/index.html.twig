@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reclamation index{% endblock %}
+
+{% block body %}
+
+    </script>
+<div style="padding-top: 200px;" class="container">
+    <h1>Mes Reclamations</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Contenu</th>
+                <th>Status</th>
+                <th>DateEnv</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reclamation in reclamations %}
+            <tr> 
+                <td>{{ reclamation.type }}</td>
+                <td>{{ reclamation.contenu }}</td>
+                <td>{{ reclamation.status }}</td>
+                <td>{{ reclamation.dateEnv ? reclamation.dateEnv|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_reclamation_edit', {'idReclamation': reclamation.idReclamation}) }}">edit</a>
+                    <a href="{{ path('app_reponse_idReclamation', {'idReclamation': reclamation.idReclamation}) }}">reponses</a>
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% set firstReclamation = reclamations[0] %}
+  <button onclick="window.location.href='{{ path('app_reclamation_new',  {'idUser': firstReclamation.idUser }) }}'">Ajouter Reclamation</button>
+</div>
+{% endblock %}

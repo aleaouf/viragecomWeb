@@ -1,0 +1,56 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block title %}Reclamation index{% endblock %}
+
+{% block body %}
+
+<!-- Radio buttons for filtering -->
+
+
+<button onclick="window.location.href='{{ path('fetch_reclamations_by_status', {'status': 'en attente'}) }}'">En Attente</button>
+<button onclick="window.location.href='{{ path('fetch_reclamations_by_status', {'status': 'traitée'}) }}'">En Traitement</button>
+<button onclick="window.location.href='{{ path('fetch_reclamations_by_status', {'status': 'en cloturee'}) }}'">Cloturée</button>
+<button onclick="window.location.href='{{ path('app_reclamation_index') }}'">All</button>
+
+    
+    <h1>Reclamations des clients :</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdReclamation</th>
+                <th>IdUser</th>
+                <th>Type</th>
+                <th>Contenu</th>
+                <th>Status</th>
+                <th>DateEnv</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reclamation in reclamations %}
+            <tr>
+                <td>{{ reclamation.idReclamation }}</td>
+                <td>{{ reclamation.idUser }}</td>
+                <td>{{ reclamation.type }}</td>
+                <td>{{ reclamation.contenu }}</td>
+                <td>{{ reclamation.status }}</td>
+                <td>{{ reclamation.dateEnv ? reclamation.dateEnv|date('Y-m-d') : '' }}</td>
+                <td>
+
+                    
+                    <a href="{{ path('app_reponse_new', {'idReclamation': reclamation.idReclamation}) }}">repondre</a>
+                    <a href="{{ path('app_reponse_admin', {'idReclamation': reclamation.idReclamation}) }}">reponses</a>
+                    
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -4,17 +4,18 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": "8.2.4",
+        "php": ">=8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^2.0",
-        "doctrine/dbal": "^3.8",
+        "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^3.0",
+        "doctrine/orm": "^2.9",
         "dompdf/dompdf": "^2.0",
         "endroid/qr-code-bundle": "^5.0",
         "knplabs/knp-paginator-bundle": "*",
+        "mercuryseries/flashy-bundle": "^5.1",
         "php-flasher/flasher-symfony": "^1.15",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.25",
@@ -34,6 +35,7 @@
         "symfony/mime": "5.4.*",
         "symfony/monolog-bundle": "^3.0",
         "symfony/notifier": "5.4.*",
+        "symfony/polyfill-mbstring": "^1.29",
         "symfony/process": "5.4.*",
         "symfony/property-access": "5.4.*",
         "symfony/property-info": "5.4.*",
@@ -70,7 +72,9 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Doctrine\\ORM\\Mapping\\": "vendor/doctrine/orm/lib/Doctrine/ORM/Mapping",
+            "Vich\\UploaderBundle\\Metadata\\Driver\\": "vendor/vich/uploader-bundle/src/Metadata/Driver"
         }
     },
     "autoload-dev": {

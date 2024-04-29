@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Reponse index{% endblock %}
+
+{% block body %}
+
+<div style="padding-top: 200px;" class="container">
+    <h1>Reponses a votre reclamation</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdReponse</th>
+                <th>IdReclamation</th>
+                <th>Contenu</th>
+                <th>DateRep</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+        {% for reponse in reponses %}
+       
+            <tr>
+                <td>{{ reponse.idReponse }}</td>
+                <td>{{ reponse.idReclamation }}</td>
+                <td>{{ reponse.contenu }}</td>
+                <td>{{ reponse.dateRep ? reponse.dateRep|date('Y-m-d') : '' }}</td>
+                
+                
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+         </tbody>
+    </table>
+    {% if reponses is not empty %}
+     {% set firstReponse = reponses[0] %}
+            <button onclick="window.location.href='{{ path('app_reclamation_edit_status',  {'idReclamation': firstReponse.idReclamation ,  'status': "cloturee"}) }}'">Cloturer</button>
+    
+{% endif %}
+    
+       
+    
+{% endblock %}

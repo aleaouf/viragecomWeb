@@ -22,6 +22,11 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Service\BadWordFilter:
+        arguments:
+            $apiKey: '%env(WEBPURIFY_API_KEY)%'
+
+
     # config/services.yaml
 
 
