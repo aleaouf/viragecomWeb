@@ -8,13 +8,13 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^2.0",
-        "doctrine/dbal": "^3",
+        "doctrine/dbal": "^3.8",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^2.9",
+        "doctrine/orm": "^2.5",
         "dompdf/dompdf": "^2.0",
         "endroid/qr-code-bundle": "^5.0",
-        "knplabs/knp-paginator-bundle": "*",
+        "knplabs/knp-paginator-bundle": "^5.9",
         "php-flasher/flasher-symfony": "^1.15",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.25",
@@ -50,6 +50,7 @@
         "symfony/yaml": "5.4.*",
         "symfonycasts/reset-password-bundle": "^1.20",
         "symfonycasts/verify-email-bundle": "^1.16",
+        "tecnickcom/tcpdf": "^6.7",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
         "twilio/sdk": "^8.0",
@@ -71,9 +72,7 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/",
-            "Doctrine\\ORM\\Mapping\\": "vendor/doctrine/orm/lib/Doctrine/ORM/Mapping",
-            "Vich\\UploaderBundle\\Metadata\\Driver\\": "vendor/vich/uploader-bundle/src/Metadata/Driver"
+            "App\\": "src/"
         }
     },
     "autoload-dev": {

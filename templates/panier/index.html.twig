@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panier index{% endblock %}
+
+{% block body %}
+<section class="breadcrumbs">
+    <div class="container">
+        <h1>Panier</h1>
+
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>NbrArticle</th>
+                    <th>Prix unitaire (د.ت)</th>
+                    <th>Prix en dollars</th>
+                    <th>Prix total (د.ت)</th> <!-- Nouvelle colonne pour le prix total -->
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for panier in paniers %}
+                <tr>
+                    <td>{{ panier.nbrArticle }}</td>
+                    <td>
+                        {% set article = articles[panier.idPanier] %}
+                        {% if article %}
+                            {{ article.prix|number_format(2, '.', ' ') }} د.ت
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if article %}
+                            {{ (article.prix / 3)|number_format(2, '.', ' ') }} $ <!-- Conversion du prix en dollars -->
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if article %}
+                            {{ (article.prix * panier.nbrArticle)|number_format(2, '.', ' ') }} د.ت <!-- Calcul du prix total de l'article -->
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if article %}
+                            <img src="../uploads/{{ article.image }}" alt="{{ article.nom }}" class="img-fluid" width="100">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_panier_show', {'idPanier': panier.idPanier}) }}">Afficher</a>
+                        <a href="{{ path('app_panier_edit', {'idPanier': panier.idPanier}) }}">Modifier</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">Aucun enregistrement trouvé</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="row justify-content-end">
+            <div class="col-md-4">
+                <div class="card bg-primary text-white mt-4">
+                    <div class="card-body">
+                        <!-- Afficher la somme totale du panier avant la remise -->
+                        <p class="card-text">Somme totale du panier avant la remise: <span class="font-weight-bold">{{ totalPrice|number_format(2, '.', ' ') }} د.ت</span></p>
+                        <!-- Afficher le montant de la remise -->
+                        <p class="card-text">Remise: <span class="font-weight-bold">{{ discount|number_format(2, '.', ' ') }} د.ت</span></p>
+                        <!-- Afficher la somme totale du panier après la remise -->
+                        <p class="card-text">Somme totale du panier après la remise: <span class="font-weight-bold">{{ (totalPrice - discount)|number_format(2, '.', ' ') }} د.ت</span></p>
+                        <!-- Bouton "Passer votre commande" -->
+                        <form action="{{ path('app_commander') }}" method="post">
+                            <button type="submit" class="btn btn-light btn-block">Passer votre commande</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
