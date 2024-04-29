@@ -221,6 +221,15 @@ class EspacepartenaireController extends AbstractController
             'categorie' => $categorie,
         ]);
     }
+    #[Route('/espacepartenaire/increment-click/{id}', name: 'espacepartenaire_increment_click', methods: ['POST'])]
+    public function incrementClickAction(Espacepartenaire $espacepartenaire, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $espacepartenaire->setNbclick($espacepartenaire->getNbclick() + 1);
+        $entityManager->flush();
+
+        return $this->json(['nbclick' => $espacepartenaire->getNbclick()]);
+    }
+}
 
  
-}
+

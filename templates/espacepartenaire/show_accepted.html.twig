@@ -4,7 +4,6 @@
 
 {% block body %}
 <div style="padding-top: 200px" class="container">
-
     <div id="wrapper">
         <div id="main">
             <div class="inner">
@@ -23,9 +22,11 @@
                                             <p class="card-text">{{ espacepartenaire.localisation }}</p>
                                             <p class="card-text">{{ espacepartenaire.getIdType.nomtype }}</p>
                                             <p class="card-text">{{ espacepartenaire.description }}</p>
+<p class="card-text">Consultations: {{ espacepartenaire.nbclick }}</p>
                                             <div class="actions">
-                                                <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}" class="btn btn-primary"
-                                                   data-nbclick="0" onclick="incrementClickCount(this)">Show</a>
+                                                <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}" 
+                                                   class="btn btn-primary"
+                                                   onclick="incrementClickCount('{{ espacepartenaire.idEspace }}')">Show</a>
                                             </div>
                                         </div>
                                     </div>
@@ -54,11 +55,24 @@
 </div>
 
 <script>
-    function incrementClickCount(button) {
-        var nbClick = parseInt(button.getAttribute('data-nbclick'));
-        nbClick++;
-        button.setAttribute('data-nbclick', nbClick);
-        alert('Number of clicks: ' + nbClick); // You can remove this alert and perform other actions as needed
+    function incrementClickCount(idEspace) {
+        // Send AJAX request to increment nbclick
+        fetch('{{ path('espacepartenaire_increment_click', {'id': 'idEspacePlaceholder'}) }}'.replace('idEspacePlaceholder', idEspace), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('nbclick updated:', data.nbclick);
+            // Optionally, update UI with the new nbclick value
+        })
+        .catch(error => {
+            console.error('Error updating nbclick:', error);
+        });
     }
 </script>
 

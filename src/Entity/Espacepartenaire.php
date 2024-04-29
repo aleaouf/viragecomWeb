@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Espacepartenaire
  *
  * @ORM\Table(name="espacepartenaire", indexes={@ORM\Index(name="id_type", columns={"id_type"}), @ORM\Index(name="id_categorie", columns={"id_categorie"}), @ORM\Index(name="id_user", columns={"id_user"})})
-     * @ORM\Entity(repositoryClass=App\Repository\EspacepartenaireRepository::class)
+ * @ORM\Entity(repositoryClass=App\Repository\EspacepartenaireRepository::class)
  * @ORM\Entity
  */
 class Espacepartenaire
