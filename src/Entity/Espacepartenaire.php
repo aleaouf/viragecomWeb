@@ -38,7 +38,7 @@ class Espacepartenaire
       * @Assert\NotBlank
       * @Assert\Regex(
      *     pattern="/^[a-zA-Z0-9 ]+$/",
-     *     message="L'adresse ne doit contenir que des lettres, des chiffres et des espaces."
+     *     message="Le nom ne doit contenir que des lettres, des chiffres et des espaces."
      * ) 
      */
     private $nom;
@@ -55,6 +55,7 @@ class Espacepartenaire
      * @var string
      *
      * @ORM\Column(name="photos", type="string", length=255, nullable=false)
+
      */
     private $photos;
 
@@ -99,6 +100,8 @@ private $categorie;
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_type", referencedColumnName="id_type")
      * })
+     * @Assert\NotBlank
+
      */
     private $idType;
 

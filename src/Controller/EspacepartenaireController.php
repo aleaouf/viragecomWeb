@@ -21,14 +21,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-
+use Knp\Component\Pager\PaginatorInterface;
 #[Route('/espacepartenaire')]
 class EspacepartenaireController extends AbstractController
 {
     
     
     #[Route('/notreEspace', name: 'app_espacepartenaire_show_accepted', methods: ['GET'])]
-    public function showAcceptedEspacepartenaires(Request $request, EspacepartenaireRepository $espacepartenaireRepository): Response
+    public function showAcceptedEspacepartenaires(Request $request, EspacepartenaireRepository $espacepartenaireRepository,  PaginatorInterface $paginator): Response
     {
         $query = $request->query->get('query');
         $acceptedEspacepartenaires = [];
@@ -39,10 +39,17 @@ class EspacepartenaireController extends AbstractController
             $acceptedEspacepartenaires = $espacepartenaireRepository->findBy(['accepted' => true]);
         }
 
+        $acceptedEspacepartenaires = $paginator->paginate(
+            $acceptedEspacepartenaires, /* query NOT result */
+            $request->query->getInt('page', 1),
+            3
+        );
+
         return $this->render('espacepartenaire/show_accepted.html.twig', [
             'acceptedEspacepartenaires' => $acceptedEspacepartenaires,
         ]);
     }
+
 
     #[Route('/new', name: 'app_new_espacepartenaire', methods: ['GET', 'POST'])]
     public function newEspacepartenaire(Request $request, EntityManagerInterface $entityManager): Response

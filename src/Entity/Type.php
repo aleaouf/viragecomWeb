@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Type
@@ -25,6 +26,11 @@ class Type
      * @var string
      *
      * @ORM\Column(name="nomType", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
+    *  @Assert\Regex(
+     *     pattern= "/^[a-zA-Z0-9\s]*[a-zA-Z0-9][a-zA-Z0-9\s]*$/",
+     *     message="Le type ne doit contenir que des lettres, des chiffres et des espaces."
+     * ) 
      */
     private $nomType; // Corrected property name to match database column
 

@@ -1,13 +1,40 @@
 {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+<style>
+.invalid-feedback {
+        color: #dc3545; /* Red color for the error message /
+        display: block;
+    }
 
+    / Apply red border and shadow for invalid inputs /
+    .is-invalid {
+        border-color: #dc3545 !important; / Override Bootstrap styles /
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+     .form-control, .form-select {
+        border-color: #89c048; / This is the green color you specified /
+        / If you want to change the focus color as well /
+        border-radius: 0.25rem; / Adjust as needed */
+    }
+</style>
 <div class="mb-3">
-    {{ form_label(form.espacepartenaire.nom) }}
-    {{ form_widget(form.espacepartenaire.nom, {'attr': {'class': 'form-control'}}) }}
+    {{ form_label(form.espacepartenaire.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.nom.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.nom, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    {% if form.espacepartenaire.nom.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.nom) }}
+        </div>
+    {% endif %}
 </div>
-
 <div class="mb-3">
-    {{ form_label(form.espacepartenaire.localisation) }}
-    {{ form_widget(form.espacepartenaire.localisation, {'attr': {'class': 'form-control'}}) }}
+    {{ form_label(form.espacepartenaire.localisation, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.localisation.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.localisation, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    {% if form.espacepartenaire.localisation.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.localisation) }}
+        </div>
+    {% endif %}
 </div>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKbAQafF9CzI3D1HJkRgwxWywnFK8oSgM&libraries=places&callback=initialize" async defer></script>
 <input id="searchInput" type="text" placeholder="Recherchez une adresse" class="form-control">
@@ -127,19 +154,36 @@
 </script>
 
 <div class="mb-3">
-    {{ form_label(form.espacepartenaire.photos) }}
-    {{ form_widget(form.espacepartenaire.photos, {'attr': {'class': 'form-control'}}) }}
+    {{ form_label(form.espacepartenaire.photos, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.photos.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.photos, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
     <img id="preview-image" src="#" alt="Aperçu de l'image" class="img-thumbnail mt-2" style="display: none;">
+    {% if form.espacepartenaire.photos.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.photos) }}
+        </div>
+    {% endif %}
+</div>
+<div class="mb-3">
+    {{ form_label(form.espacepartenaire.description, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.description.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.description, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    {% if form.espacepartenaire.description.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.description) }}
+        </div>
+    {% endif %}
 </div>
 
 <div class="mb-3">
-    {{ form_label(form.espacepartenaire.description) }}
-    {{ form_widget(form.espacepartenaire.description, {'attr': {'class': 'form-control'}}) }}
-</div>
-
-<div class="mb-3">
-    {{ form_label(form.espacepartenaire.id_type) }}
-    {{ form_widget(form.espacepartenaire.id_type, {'attr': {'class': 'form-control'}}) }}
+    {{ form_label(form.espacepartenaire.id_type, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.id_type.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.id_type, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    {% if form.espacepartenaire.id_type.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.id_type) }}
+        </div>
+    {% endif %}
 </div>
 
 

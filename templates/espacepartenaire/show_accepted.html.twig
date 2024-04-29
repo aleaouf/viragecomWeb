@@ -1,49 +1,65 @@
-    {% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
-    {% block title %}Espacepartenaire index{% endblock %}
+{% block title %}Espacepartenaire index{% endblock %}
 
-    {% block body %}
-    <div style="padding-top: 200px" class="container">
-        <div id="wrapper">
-            <div id="main">
-                <div class="inner">
-                    <!-- Services -->
-                    <section class="services">
-                        <div class="container-fluid">
-                            <div class="row">
-                                {% for espacepartenaire in acceptedEspacepartenaires %}
-                                    <div class="col-md-4">
-                                        <div class="service-item">
-                                            <h4>{{ espacepartenaire.nom }}</h4>
-                                            <p>{{ espacepartenaire.localisation }}</p>
-                                            <p>{{ espacepartenaire.getIdType.nomtype }}</p>
-                                            {% if espacepartenaire.photos %}
-                                                <img class="img-fluid w-100" src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" alt="">
-                                            {% endif %}
-                                            <p>{{ espacepartenaire.description }}</p>
+{% block body %}
+<div style="padding-top: 200px" class="container">
+
+    <div id="wrapper">
+        <div id="main">
+            <div class="inner">
+                <!-- Services -->
+                <section class="services">
+                    <div class="container-fluid">
+                        <div class="row">
+                            {% for espacepartenaire in acceptedEspacepartenaires %}
+                                <div class="col-md-4">
+                                    <div class="card h-100">
+                                        {% if espacepartenaire.photos %}
+                                            <img class="card-img-top" src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" alt="">
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ espacepartenaire.nom }}</h5>
+                                            <p class="card-text">{{ espacepartenaire.localisation }}</p>
+                                            <p class="card-text">{{ espacepartenaire.getIdType.nomtype }}</p>
+                                            <p class="card-text">{{ espacepartenaire.description }}</p>
                                             <div class="actions">
-                                                <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}">show</a>
+                                                <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}" class="btn btn-primary"
+                                                   data-nbclick="0" onclick="incrementClickCount(this)">Show</a>
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %}
-                            </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                    </section>
-                </div>
+                    </div>
+                </section>
             </div>
         </div>
-
-        <!-- "I'm a Partner" button -->
-        <div style="position: fixed; top: 200px; right: 30px;">
-            <a href="{{ path('app_espacepartenaire_show_user', {'userId': 25}) }}" class="btn btn-primary">I'm a Partner</a>
-        </div>
-        <!-- Search input -->
-        <div style="position: fixed; top: 200px; left: 30px;">
-            <form action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
-                <input type="text" name="query" placeholder="Search by name or type..." value="{{ app.request.get('query') }}">
-                <button type="submit">Search</button>
-            </form>
-        </div>
     </div>
-    {% endblock %}
+    
+    {{ knp_pagination_render(acceptedEspacepartenaires) }}
+
+    <!-- "I'm a Partner" button -->
+    <div style="position: absolute; top: 200px; right: 30px;">
+        <a href="{{ path('app_espacepartenaire_show_user', {'userId': 25}) }}" class="btn btn-primary">I'm a Partner</a>
+    </div>
+    <!-- Search input -->
+    <div style="position: absolute; top: 200px; left: 30px;">
+        <form action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
+            <input type="text" name="query" placeholder="Search by name or type..." value="{{ app.request.get('query') }}">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function incrementClickCount(button) {
+        var nbClick = parseInt(button.getAttribute('data-nbclick'));
+        nbClick++;
+        button.setAttribute('data-nbclick', nbClick);
+        alert('Number of clicks: ' + nbClick); // You can remove this alert and perform other actions as needed
+    }
+</script>
+
+{% endblock %}
