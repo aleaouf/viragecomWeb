@@ -2,51 +2,92 @@
 
 namespace App\Entity;
 
-use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
+/**
+ * Utilisateur
+ *
+ * @ORM\Table(name="utilisateur")
+ * @ORM\Entity(repositoryClass=App\Repository\UtilisateurRepository::class)
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ */
+class Utilisateur implements UserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=180, nullable=false, unique=true)
+     */
     private ?string $email = null;
 
-    #[ORM\Column]
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="json", nullable=false)
+     */
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", nullable=false)
      */
-    #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_verified", type="boolean", nullable=false)
+     */
+    private bool $isVerified = false;
 
-    #[ORM\Column(length: 20)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=20, nullable=false)
+     */
     private ?string $nom = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="prenom", type="string", length=20, nullable=true)
+     */
     private ?string $prenom = null;
 
-    #[ORM\Column]
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="age", type="integer", nullable=false)
+     */
     private ?int $age = null;
 
-    #[ORM\Column(length: 10)]
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="role", type="string", length=10, nullable=false)
+     */
     private ?string $role = null;
-    
-    private $profilePhoto;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="banned", type="boolean", nullable=false)
+     */
+    private bool $banned = false;
+
+    // Méthodes UserInterface
 
     public function getId(): ?int
     {
@@ -58,85 +99,37 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getUsername(): string
-    {
-        return (string) $this->email;
-    }
-
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ADMIN';
-        $roles[] = 'espace owner';
-        $roles[] = 'FAN';
-
-        return array_unique($roles);
+        return array_unique(array_merge($this->roles, ['ROLE_USER']));
     }
 
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * Returning a salt is only needed, if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-     *
-     * @see UserInterface
-     */
-    public function getSalt(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Effacer les données sensibles, si nécessaire.
     }
 
     public function isVerified(): bool
@@ -144,10 +137,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isVerified;
     }
 
-    public function setIsVerified(bool $isVerified): static
+    public function setIsVerified(bool $isVerified): self
     {
-        $this->isVerified = $isVerified;
-
+        $this->isVerified = isVerified;
         return $this;
     }
 
@@ -155,23 +147,22 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->nom;
     }
+    public function setNom(?string $nom): self
+{
+    $this->nom = $nom; // Utilisez $nom au lieu de nom
+    return $this;
+}
 
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
+ 
 
     public function getPrenom(): ?string
     {
         return $this->prenom;
     }
 
-    public function setPrenom(?string $prenom): static
+    public function setPrenom(?string $prenom): self
     {
-        $this->prenom = $prenom;
-
+        $this->prenom =$prenom;
         return $this;
     }
 
@@ -180,10 +171,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->age;
     }
 
-    public function setAge(int $age): static
+    public function setAge(?int $age): self
     {
         $this->age = $age;
-
         return $this;
     }
 
@@ -192,15 +182,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->role;
     }
 
-    public function setRole(string $role): static
+    public function setRole(?string $role): self
     {
         $this->role = $role;
-
         return $this;
     }
-    #[ORM\Column(type: "boolean")]
-
-    private $banned = false;
 
     public function isBanned(): bool
     {
@@ -209,8 +195,26 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setBanned(bool $banned): self
     {
-        $this->banned = $banned;
-
+        $this->banned = banned;
         return $this;
+    }
+
+    // Implémentation des méthodes requises par UserInterface
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function getUsername(): string
+    {
+        // Retourne l'email comme nom d'utilisateur unique
+        return $this->email;
+    }
+
+    public function getSalt(): ?string
+    {
+        // Pas besoin de sel car vous utilisez probablement bcrypt ou un autre algorithme moderne
+        return null;
     }
 }
