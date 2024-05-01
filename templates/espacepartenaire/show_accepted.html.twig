@@ -2,6 +2,15 @@
 
 {% block title %}Espacepartenaire index{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        .active-sort {
+            background-color: green;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 <div style="padding-top: 200px" class="container">
     <div id="wrapper">
@@ -22,11 +31,12 @@
                                             <p class="card-text">{{ espacepartenaire.localisation }}</p>
                                             <p class="card-text">{{ espacepartenaire.getIdType.nomtype }}</p>
                                             <p class="card-text">{{ espacepartenaire.description }}</p>
-<p class="card-text">Consultations: {{ espacepartenaire.nbclick }}</p>
+                                            <p class="card-text">Consultations: {{ espacepartenaire.nbclick }}</p>
                                             <div class="actions">
-                                                <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}" 
+                                            <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}" 
                                                    class="btn btn-primary"
                                                    onclick="incrementClickCount('{{ espacepartenaire.idEspace }}')">Show</a>
+                                                <button class="btn btn-info" onclick="showOnMap('{{ espacepartenaire.localisation }}')">Show on Map</button>
                                             </div>
                                         </div>
                                     </div>
@@ -38,7 +48,23 @@
             </div>
         </div>
     </div>
+
+    <!-- "Sort by Popularity" button -->
+    <div style="position: absolute; top: 250px; left: 30px;">
+        <form id="sortForm" action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
+            <input type="hidden" id="sortInput" name="sort" value="">
+            <button type="button" class="btn btn-success" id="sortButton" onclick="toggleSort()">Trier par espace Populaire</button>
+        </form>
+    </div>
+
+    <!-- "Reset" button -->
+    <div style="position: absolute; top: 250px; left: 240px;">
+        <form action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
+            <button type="submit" class="btn btn-secondary">Retirer</button>
+        </form>
+    </div>
     
+    <!-- Pagination -->
     {{ knp_pagination_render(acceptedEspacepartenaires) }}
 
     <!-- "I'm a Partner" button -->
@@ -52,9 +78,26 @@
             <button type="submit">Search</button>
         </form>
     </div>
+
+    <!-- Map container -->
+    <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
 </div>
 
 <script>
+    let sortState = '';
+
+    function toggleSort() {
+        if (sortState === '') {
+            sortState = 'nbclick';
+            document.getElementById('sortButton').classList.add('active-sort');
+        } else {
+            sortState = '';
+            document.getElementById('sortButton').classList.remove('active-sort');
+        }
+        document.getElementById('sortInput').value = sortState;
+        document.getElementById('sortForm').submit();
+    }
+
     function incrementClickCount(idEspace) {
         // Send AJAX request to increment nbclick
         fetch('{{ path('espacepartenaire_increment_click', {'id': 'idEspacePlaceholder'}) }}'.replace('idEspacePlaceholder', idEspace), {
@@ -74,6 +117,29 @@
             console.error('Error updating nbclick:', error);
         });
     }
-</script>
 
+    function showOnMap(address) {
+        const geocoder = new google.maps.Geocoder();
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: { lat: 0, lng: 0 } // Default center, update based on actual usage
+        });
+
+        geocoder.geocode({ address: address }, (results, status) => {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKbAQafF9CzI3D1HJkRgwxWywnFK8oSgM&libraries=places&callback=initialize" async defer></script>
 {% endblock %}
+
+
+

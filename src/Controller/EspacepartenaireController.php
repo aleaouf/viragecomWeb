@@ -101,13 +101,39 @@ class EspacepartenaireController extends AbstractController
  
 
     #[Route('/Admin', name: 'app_espacepartenaire_index', methods: ['GET'])]
-    public function indexEspacepartenaire(EspacepartenaireRepository $espacepartenaireRepository): Response
+    public function indexEspacepartenaire(EspacepartenaireRepository $espacepartenaireRepository, Request $request): Response
     {
+        $query = $request->query->get('query', '');
+        $sort = $request->query->get('sort', '');
+
+        if (!empty($query)) {
+            // Perform search by name or type if query parameter is present
+            $espacepartenaires = $espacepartenaireRepository->searchALLByNameOrType($query);
+        } else {
+            // Fetch all Espacepartenaires if no query parameter
+            $espacepartenaires = $espacepartenaireRepository->findAll();
+        }
+       
+
+        if ($sort === 'nbclick') {
+            // Sort by nbClick if sort parameter is 'nbclick'
+            $espacepartenaires = $espacepartenaireRepository->findAllSortedByNbClick();
+        } elseif ($sort === 'nom') {
+            // Sort by nom (name) if sort parameter is 'nom'
+            $espacepartenaires = $espacepartenaireRepository->findAllSortedByNom();
+        }
+         elseif ($sort === 'accepted') {
+            // Sort by notaccepted if sort parameter is 'accepted'
+            $espacepartenaires = $espacepartenaireRepository->findNotAccepted();
+        }
+
         return $this->render('espacepartenaire/index.html.twig', [
-            'espacepartenaires' => $espacepartenaireRepository->findAll(),
+            'espacepartenaires' => $espacepartenaires,
+            'query' => $query,
+            'sort' => $sort,
         ]);
     }
-    
+
     #[Route('/{idEspace}/accept', name: 'app_espacepartenaire_accept', methods: ['POST'])]
     public function acceptEspacepartenaire(Espacepartenaire $espacepartenaire, EntityManagerInterface $entityManager): Response
     {  $accountSid = $_ENV['TWILIO_ACCOUNT_SID'];

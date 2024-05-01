@@ -72,32 +72,36 @@
     }
 
     // Fonction pour convertir une position en adresse et la mettre dans le champ du formulaire
-    function geocodeLatLng(latlng) {
+   function geocodeLatLng(latlng) {
     geocoder.geocode({ 'location': latlng }, function (results, status) {
         if (status === 'OK') {
-            if (results[0]) {
+            if (results && results.length > 0) {
                 var addressFound = false;
-                // Essayez d'abord de trouver une adresse de rue ou une route.
+
+                // Loop through each result to find the most precise address
                 for (var i = 0; i < results.length; i++) {
-                    if (results[i].types.indexOf('street_address') !== -1 || results[i].types.indexOf('route') !== -1) {
-                        document.getElementById('{{ form.espacepartenaire.localisation.vars.id }}').value = results[i].formatted_address;
+                    // Check for specific types of addresses (e.g., street address or route)
+                    if (results[i].types.includes('street_address') || results[i].types.includes('route')) {
+                        setAddress(results[i].formatted_address);
                         addressFound = true;
-                        break; // Adresse trouvée, quittez la boucle.
+                        break; // Address found, exit the loop
                     }
                 }
-                // Si aucune rue n'est trouvée, essayez de trouver un quartier ou une zone politique.
+
+                // If no street address is found, try to find a political area or locality
                 if (!addressFound) {
                     for (var i = 0; i < results.length; i++) {
-                        if (results[i].types.indexOf('political') !== -1 || results[i].types.indexOf('sublocality') !== -1 || results[i].types.indexOf('locality') !== -1) {
-                            document.getElementById('{{form.espacepartenaire.localisation.vars.id }}').value = results[i].formatted_address;
+                        if (results[i].types.includes('political') || results[i].types.includes('locality')) {
+                            setAddress(results[i].formatted_address);
                             addressFound = true;
-                            break; // Adresse trouvée, quittez la boucle.
+                            break; // Address found, exit the loop
                         }
                     }
                 }
-                // Si aucun résultat plus spécifique n'est trouvé, utilisez le résultat le plus général.
+
+                // If still no specific result is found, use the first result
                 if (!addressFound) {
-                    document.getElementById('{{form.espacepartenaire.localisation.vars.id }}').value = results[0].formatted_address;
+                    setAddress(results[0].formatted_address);
                 }
             } else {
                 window.alert('No results found');
@@ -107,6 +111,12 @@
         }
     });
 }
+
+// Helper function to set the address in the form field
+function setAddress(address) {
+    document.getElementById('{{ form.espacepartenaire.localisation.vars.id }}').value = address;
+}
+
 
     function addMarker(location) {
         clearMarkers();
