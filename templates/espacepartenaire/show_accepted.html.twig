@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espacepartenaire index{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .active-sort {
+            background-color: green;
+            color: white;
+        }
+        
+    </style>
+{% endblock %}
+
+{% block body %}
+<div style="padding-top: 200px" class="container">
+    <div id="wrapper">
+        <div id="main">
+            <div class="inner">
+                <!-- Services -->
+                <section class="services">
+                    <div class="container-fluid">
+                        <div class="row">
+                            {% for espacepartenaire in acceptedEspacepartenaires %}
+                                <div class="col-md-4">
+                                    <div class="card h-100">
+                                        {% if espacepartenaire.photos %}
+                                            <img class="card-img-top" src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" alt="">
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ espacepartenaire.nom }}</h5>
+                                            <p class="card-text">{{ espacepartenaire.localisation }}</p>
+                                            <p class="card-text">{{ espacepartenaire.getIdType.nomtype }}</p>
+                                            <p class="card-text">{{ espacepartenaire.description }}</p>
+                                            <p class="card-text">Consultations: {{ espacepartenaire.nbclick }}</p>
+                                            <div class="actions">
+                                            <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}" 
+                                                   class="btn btn-primary"
+                                                   onclick="incrementClickCount('{{ espacepartenaire.idEspace }}')">Show</a>
+<button style="background-color: transparent; border: none;" onclick="showOnMap('{{ espacepartenaire.localisation }}')">
+    <img src="{{ asset('png-transparent-google-map-logo-google-maps-navigation-location-text-logo-sign.png') }}" alt="Map Icon" style="width: 40px; height: 40px; margin-left: 5px;">                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- "Sort by Popularity" button -->
+    <div style="position: absolute; top: 250px; left: 30px;">
+        <form id="sortForm" action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
+            <input type="hidden" id="sortInput" name="sort" value="">
+            <button type="button" class="btn btn-success" id="sortButton" onclick="toggleSort()">Trier par espace Populaire</button>
+        </form>
+    </div>
+
+    <!-- "Reset" button -->
+    <div style="position: absolute; top: 250px; left: 240px;">
+        <form action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
+            <button type="submit" class="btn btn-secondary">Retirer</button>
+        </form>
+    </div>
+    
+    <!-- Pagination -->
+    {{ knp_pagination_render(acceptedEspacepartenaires) }}
+
+    <!-- "I'm a Partner" button -->
+    <div style="position: absolute; top: 200px; right: 30px;">
+{# Check if user is authenticated #}
+{% if app.user %}
+    {% set userRole = app.user.role %}
+    {% if userRole == 'Partner' %}
+        {# User is authenticated and has the PARTNER role #}
+        {# Get the ID of the logged-in user #}
+        {% set userId = app.user.id %}
+
+        {# Generate the link using the logged-in user's ID #}
+        <a href="{{ path('app_espacepartenaire_show_user', {'userId': userId}) }}" class="btn btn-primary">I'm a Partner</a>
+    {% else %}
+        {# User is authenticated but does not have the PARTNER role #}
+        <p>You do not have permission to access this feature.</p>
+    {% endif %}
+{% else %}
+    {# User is not authenticated #}
+    <p>You need to be logged in to access this feature.</p>
+{% endif %}  </div>
+    <!-- Search input -->
+    <div style="position: absolute; top: 200px; left: 30px;">
+        <form action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
+            <input type="text" name="query" placeholder="Search by name or type..." value="{{ app.request.get('query') }}">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <!-- Map container -->
+    <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+</div>
+
+<script>
+    let sortState = '';
+
+    function toggleSort() {
+        if (sortState === '') {
+            sortState = 'nbclick';
+            document.getElementById('sortButton').classList.add('active-sort');
+        } else {
+            sortState = '';
+            document.getElementById('sortButton').classList.remove('active-sort');
+        }
+        document.getElementById('sortInput').value = sortState;
+        document.getElementById('sortForm').submit();
+    }
+
+    function incrementClickCount(idEspace) {
+        // Send AJAX request to increment nbclick
+        fetch('{{ path('espacepartenaire_increment_click', {'id': 'idEspacePlaceholder'}) }}'.replace('idEspacePlaceholder', idEspace), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('nbclick updated:', data.nbclick);
+            // Optionally, update UI with the new nbclick value
+        })
+        .catch(error => {
+            console.error('Error updating nbclick:', error);
+        });
+    }
+
+    function showOnMap(address) {
+        const geocoder = new google.maps.Geocoder();
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: { lat: 0, lng: 0 } // Default center, update based on actual usage
+        });
+
+        geocoder.geocode({ address: address }, (results, status) => {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKbAQafF9CzI3D1HJkRgwxWywnFK8oSgM&libraries=places&callback=initialize" async defer></script>
+{% endblock %}
+
+
+

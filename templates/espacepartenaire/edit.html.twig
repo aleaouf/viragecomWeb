@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Espacepartenaire{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+<div style="padding-top: 150px" class="container">
+
+    <h1>Edit Espacepartenaire</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            {{ include('espacepartenaire/_form.html.twig', {'button_label': 'Update'}) }}
+        </div>
+
+        <div class="col-md-4">
+<a href="{{ path('app_espacepartenaire_show_user', {'userId': app.user.id }) }}" class="btn btn-secondary mb-3">Back to List</a>
+            {{ include('espacepartenaire/_delete_form.html.twig', {'delete_button_class': 'btn btn-danger'}) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

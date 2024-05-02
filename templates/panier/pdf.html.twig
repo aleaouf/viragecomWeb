@@ -1,0 +1,55 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>IdPanier</th>
+            <th>IdUser</th>
+            <th>NbrArticle</th>
+            <th>IdArticle</th>
+            <th>Prix</th> <!-- Nouvelle colonne pour le prix -->
+            <th>Image</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for panier in paniers %}
+            <tr>
+                <td>{{ panier.idPanier }}</td>
+                <td>{{ panier.idUser }}</td>
+                <td>{{ panier.nbrArticle }}</td>
+                <td>{{ panier.idArticle }}</td>
+                <td>
+                    {% set article = articles[panier.idPanier] %}
+                    {% if article %}
+                        {{ article.prix }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if article %}
+                        <img src="{{ asset('uploads/' ~ article.image) }}" alt="{{ article.nom }}" class="img-fluid" width="100">
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <!-- Vous pouvez ajouter d'autres colonnes ici si nécessaire -->
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucun enregistrement trouvé</td>
+            </tr>
+        {% endfor %}
+        <!-- Afficher la somme totale du panier avant la remise -->
+        <tr>
+            <td colspan="7">Somme totale du panier avant la remise: {{ totalPrice }} €</td>
+        </tr>
+        <!-- Afficher le montant de la remise -->
+        <tr>
+            <td colspan="7">Remise: {{ discount }} €</td>
+        </tr>
+        <!-- Afficher la somme totale du panier après la remise -->
+        <tr>
+            <td colspan="7">Somme totale du panier après la remise: {{ totalPrice - discount }} €</td>
+        </tr>
+    </tbody>
+</table>

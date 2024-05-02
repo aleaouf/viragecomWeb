@@ -1,0 +1,62 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block body %}
+<div style="padding-top: 200px" class="container">
+    <h1>Statistiques d'âge des utilisateurs</h1>
+
+    <!-- Balise <canvas> pour afficher le graphique -->
+    <canvas id="ageChart"></canvas>
+
+    <!-- Script JavaScript pour créer le graphique -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Obtenez le contexte du canvas
+        const ctx = document.getElementById('ageChart').getContext('2d');
+
+        // Données pour le graphique
+        const data = {
+            labels: ['Moins de 18 ans', 'Entre 19 et 26 ans', 'Plus de 27 ans'],
+            datasets: [{
+                label: 'Nombre d\'utilisateurs',
+                data: [{{ under18 }}, {{ between19And26 }}, {{ over27 }}],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 99, 132, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Créez un graphique à barres avec Chart.js
+        const ageChart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Affiche les statistiques d'âge des utilisateurs -->
+    <ul>
+        <li>Moins de 18 ans : {{ under18 }}</li>
+        <li>Entre 19 et 26 ans : {{ between19And26 }}</li>
+        <li>Plus de 27 ans : {{ over27 }}</li>
+    </ul>
+
+    <!-- Bouton pour revenir à index.html.twig -->
+    <a href="{{ path('app_utilisateur_index') }}" class="btn btn-secondary">
+        Revenir à l'index
+    </a>
+</div>
+{% endblock %}

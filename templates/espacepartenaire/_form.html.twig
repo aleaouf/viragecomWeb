@@ -1,0 +1,205 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+<style>
+.invalid-feedback {
+        color: #dc3545; /* Red color for the error message /
+        display: block;
+    }
+
+    / Apply red border and shadow for invalid inputs /
+    .is-invalid {
+        border-color: #dc3545 !important; / Override Bootstrap styles /
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+     .form-control, .form-select {
+        border-color: #89c048; / This is the green color you specified /
+        / If you want to change the focus color as well /
+        border-radius: 0.25rem; / Adjust as needed */
+    }
+    
+</style>
+<div class="mb-3">
+    {{ form_label(form.espacepartenaire.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.nom.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.nom, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    {% if form.espacepartenaire.nom.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.nom) }}
+        </div>
+    {% endif %}
+</div>
+<div class="mb-3">
+    {{ form_label(form.espacepartenaire.localisation, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.localisation.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.localisation, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    {% if form.espacepartenaire.localisation.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.localisation) }}
+        </div>
+    {% endif %}
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKbAQafF9CzI3D1HJkRgwxWywnFK8oSgM&libraries=places&callback=initialize" async defer></script>
+<input id="searchInput" type="text" placeholder="Recherchez une adresse" class="form-control">
+<div id="map" style="height: 400px;"></div>
+<button id="selectLocationBtn" class="btn btn-primary">Sélectionner cette localisation</button>
+<script>
+     var map;
+    var markers = [];
+    var selectedMarker;
+    var searchBox;
+    var geocoder;
+
+    function initialize() {
+        var mapOptions = {
+            center: {lat: 36.8065, lng: 10.1815},
+            zoom: 8
+        };
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        geocoder = new google.maps.Geocoder();
+        initSearchBox();
+
+        // Ajoutez un écouteur de clic sur la carte pour ajouter un marqueur
+        google.maps.event.addListener(map, 'click', function(event) {
+            clearMarkers();
+            addMarker(event.latLng);
+            geocodeLatLng(event.latLng);
+        });
+
+        // Ajoutez un écouteur pour le clic sur le bouton de sélection
+        document.getElementById('selectLocationBtn').addEventListener('click', function() {
+            if (selectedMarker) {
+                geocodeLatLng(selectedMarker.getPosition());
+            }
+        });
+    }
+
+    // Fonction pour convertir une position en adresse et la mettre dans le champ du formulaire
+   function geocodeLatLng(latlng) {
+    geocoder.geocode({ 'location': latlng }, function (results, status) {
+        if (status === 'OK') {
+            if (results && results.length > 0) {
+                var addressFound = false;
+
+                // Loop through each result to find the most precise address
+                for (var i = 0; i < results.length; i++) {
+                    // Check for specific types of addresses (e.g., street address or route)
+                    if (results[i].types.includes('street_address') || results[i].types.includes('route')) {
+                        setAddress(results[i].formatted_address);
+                        addressFound = true;
+                        break; // Address found, exit the loop
+                    }
+                }
+
+                // If no street address is found, try to find a political area or locality
+                if (!addressFound) {
+                    for (var i = 0; i < results.length; i++) {
+                        if (results[i].types.includes('political') || results[i].types.includes('locality')) {
+                            setAddress(results[i].formatted_address);
+                            addressFound = true;
+                            break; // Address found, exit the loop
+                        }
+                    }
+                }
+
+                // If still no specific result is found, use the first result
+                if (!addressFound) {
+                    setAddress(results[0].formatted_address);
+                }
+            } else {
+                window.alert('No results found');
+            }
+        } else {
+            window.alert('Geocoder failed due to: ' + status);
+        }
+    });
+}
+
+// Helper function to set the address in the form field
+function setAddress(address) {
+    document.getElementById('{{ form.espacepartenaire.localisation.vars.id }}').value = address;
+}
+
+
+    function addMarker(location) {
+        clearMarkers();
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+        markers.push(marker);
+        selectedMarker = marker;
+    }
+
+    function clearMarkers() {
+        for (var marker of markers) {
+            marker.setMap(null);
+        }
+        markers = [];
+    }
+
+    function initSearchBox() {
+        var input = document.getElementById('searchInput');
+        searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        map.addListener('bounds_changed', function() {
+            searchBox.setBounds(map.getBounds());
+        });
+
+        searchBox.addListener('places_changed', function() {
+            var places = searchBox.getPlaces();
+            if (places.length == 0) return;
+
+            clearMarkers();
+            var bounds = new google.maps.LatLngBounds();
+            for (var place of places) {
+                if (!place.geometry) return;
+                addMarker(place.geometry.location);
+                if (place.geometry.viewport) bounds.union(place.geometry.viewport);
+                else bounds.extend(place.geometry.location);
+            }
+            map.fitBounds(bounds);
+        });
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<div class="mb-3">
+    {{ form_label(form.espacepartenaire.photos, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.photos.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.photos, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    <img id="preview-image" src="#" alt="Aperçu de l'image" class="img-thumbnail mt-2" style="display: none;">
+    {% if form.espacepartenaire.photos.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.photos) }}
+        </div>
+    {% endif %}
+</div>
+<div class="mb-3">
+    {{ form_label(form.espacepartenaire.description, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.description.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.description, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    {% if form.espacepartenaire.description.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.description) }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.espacepartenaire.id_type, null, {'label_attr': {'class': 'form-label'}}) }}
+    {% set errorClass = form.espacepartenaire.id_type.vars.errors is not empty ? 'is-invalid' : '' %}
+    {{ form_widget(form.espacepartenaire.id_type, {'attr': {'class': 'form-control ' ~ errorClass}}) }}
+    {% if form.espacepartenaire.id_type.vars.errors %}
+        <div class="invalid-feedback">
+            {{ form_errors(form.espacepartenaire.id_type) }}
+        </div>
+    {% endif %}
+</div>
+
+
+
+{{ form_end(form) }}
+
+
+

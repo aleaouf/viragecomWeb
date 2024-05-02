@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}marketplace{% endblock %}
+
+{% block body %}
+<section class="breadcrumbs">
+    <div class="container">
+        <h1>marketplace</h1>
+        <!-- Barre de recherche -->
+        <form id="searchForm">
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control" placeholder="Rechercher..." aria-label="Rechercher..." aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="submit" id="searchButton">Rechercher</button>
+            </div>
+        </form>
+
+        <!-- Div pour afficher les résultats de la recherche -->
+        <div id="searchResults"></div>
+    </div>
+</section>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <!-- Bouton de tri -->
+        <button class="btn btn-primary" id="sortButton">Trier par nom</button>
+        <!-- Bouton "Mon Panier" -->
+        <a href="{{ path('app_panier_index') }}" class="btn btn-success float-right">Mon Panier</a>
+    </div>
+    {% for article in articles %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            
+            {% if article.image %}
+                <img class="card-img-top img-fluid" src="{{ asset('uploads/' ~ article.image) }}" alt="">
+                   {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ article.nom }}</h5>
+                <p class="card-text">{{ article.description }}</p>
+                <p class="card-text"><strong>Prix:</strong> {{ article.prix }}</p>
+                <p class="card-text"><strong>Contact:</strong> {{ article.contact }}</p>
+                <p class="card-text"><strong>Quantité:</strong> {{ article.quantite }}</p>
+                <!-- Ajoutez les boutons "like" et "dislike" ici -->
+                <div>
+                    <button class="btn btn-success like-btn" data-article-id="{{ article.id }}">Like <span class="like-count">{{ reactionsCounts[article.id].likeCount }}</span></button>
+                    <button class="btn btn-danger dislike-btn" data-article-id="{{ article.id }}">Dislike <span class="dislike-count">{{ reactionsCounts[article.id].dislikeCount }}</span></button>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{{ path('app_panier_new', {'id': article.id}) }}" class="btn btn-primary">Ajouter au panier</a>
+                <a href="{{ path('app_articles_show2', {'id': article.id}) }}" class="btn btn-info">Voir</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <p class="text-center">Aucun article trouvé.</p>
+    </div>
+    {% endfor %}
+</div>
+<div class="row">
+    {# Afficher les articles paginés #}
+    {% for article in articles %}
+        <!-- Affichage des articles -->
+    {% else %}
+        <div class="col-12">
+            <p class="text-center">Aucun article trouvé.</p>
+        </div>
+    {% endfor %}
+</div>
+
+{# Afficher les liens de pagination #}
+<div class="pagination">
+    {{ knp_pagination_render(articles) }}
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#searchForm').submit(function (e) {
+            e.preventDefault();
+            var searchTerm = $('#searchInput').val();
+            $.ajax({
+                url: '{{ path('app_search_articles') }}',
+                type: 'GET',
+                data: {
+                    q: searchTerm
+                },
+                success: function (response) {
+                    $('#searchResults').html(response);
+                },
+                error: function () {
+                    $('#searchResults').html('<p>Erreur lors de la recherche.</p>');
+                }
+            });
+        });
+
+        $('#sortButton').click(function () {
+            window.location.href = '{{ path('app_articles_sort_by_name') }}';
+        });
+
+        $('.like-btn').click(function () {
+            var articleId = $(this).data('article-id');
+            reactToArticle(articleId, 'like');
+        });
+
+        $('.dislike-btn').click(function () {
+            var articleId = $(this).data('article-id');
+            reactToArticle(articleId, 'dislike');
+        });
+
+        function reactToArticle(articleId, reactionType) {
+            $.ajax({
+                url: '{{ path('app_react_to_article') }}',
+                type: 'POST',
+                data: {
+                    article_id: articleId,
+                    reaction_type: reactionType
+                },
+                success: function (response) {
+                    window.location.reload(); 
+                    // Mettez à jour l'interface utilisateur si nécessaire
+                },
+                error: function () {
+                    alert('Erreur lors de la réaction à l\'article.');
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

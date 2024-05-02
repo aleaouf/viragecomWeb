@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espacepartenaire index{% endblock %}
+
+{% block body %}
+<div style="padding-top: 200px" class="container">
+    <div class="row">
+        {% for espacepartenaire in espacepartenaires %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if espacepartenaire.photos %}
+                        <img src="{{ asset('uploads/images/' ~ espacepartenaire.photos) }}" class="card-img-top" alt="{{ espacepartenaire.nom }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ espacepartenaire.nom }}</h5>
+                        <p class="card-text">{{ espacepartenaire.localisation }}</p>
+                        <p class="card-text">{{ espacepartenaire.getIdType.nomtype }}</p>
+                        <p class="card-text">{{ espacepartenaire.description }}</p>
+
+                        <div class="actions">
+                            <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': espacepartenaire.idEspace}) }}" class="btn btn-primary">Show</a>
+                            <a href="{{ path('app_espacepartenaire_edit', {'idEspace': espacepartenaire.idEspace}) }}" class="btn btn-secondary">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-md-12">
+                <p>No records found.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('app_new_espacepartenaire') }}" class="btn btn-success">Create new</a>
+        <a href="{{ path('app_espacepartenaire_show_accepted') }}" class="btn btn-secondary">Back to List</a>
+    </div>
+    </div>
+</div>
+{% endblock %}

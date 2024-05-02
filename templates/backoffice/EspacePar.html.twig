@@ -1,0 +1,102 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block title %}Espacepartenaire Index{% endblock %}
+
+{% block body %}
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <!-- Services -->
+            <section class="services">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Search Form -->
+                            <form method="get" action="{{ path('app_espacepartenaire') }}" class="mb-3">
+                                <div class="input-group">
+                                    <input type="text" name="query" class="form-control" placeholder="Search by name or type..." value="{{ query }}">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </form>
+
+                            <!-- Sorting Links -->
+                            <div class="mb-3">
+                                <a href="{{ path('app_espacepartenaire', {'sort': 'nbclick'}) }}" class="btn btn-secondary">Sort by Consultations</a>
+                                <a href="{{ path('app_espacepartenaire', {'sort': 'nom'}) }}" class="btn btn-secondary">Sort by Name</a>
+                                <a href="{{ path('app_espacepartenaire', {'sort': 'accepted'}) }}" class="btn btn-secondary">Show Pending Spaces</a>
+                            </div>
+
+                            <!-- Espacepartenaire Table -->
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Localisation</th>
+                                        <th>Type</th>
+                                        <th>Nombre de Consultations</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if espacepartenaires is not empty %}
+                                        {% for espacepartenaire in espacepartenaires %}
+                                            <tr>
+                                                <td>{{ espacepartenaire.nom }}</td>
+                                                <td>{{ espacepartenaire.localisation }}</td>
+                                                <td>{{ espacepartenaire.getIdType.nomtype }}</td>
+                                                <td>{{ espacepartenaire.nbclick }}</td>
+                                                <td>{{ espacepartenaire.description }}</td>
+                                                <td>
+                                                    <a href="{{ path('app_espacepartenaire_show', {'idEspace': espacepartenaire.idEspace}) }}" class="btn btn-primary">Show</a>
+                                                    {% if not espacepartenaire.accepted %}
+                                                        <button onclick="acceptEspacepartenaire('{{ espacepartenaire.idEspace }}')" class="btn btn-success">Accept</button>
+                                                    {% endif %}
+                                                    <form id="deleteForm_{{ espacepartenaire.idEspace }}" action="{{ path('app_espacepartenaire_remove', {'idEspace': espacepartenaire.idEspace}) }}" method="post" style="display: inline;">
+                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ espacepartenaire.idEspace) }}">
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6">No records found</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script>
+    function acceptEspacepartenaire(id) {
+        fetch('{{ path('app_espacepartenaire_accept', {'idEspace': 'PLACEHOLDER'}) }}'.replace('PLACEHOLDER', id), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ idEspace: id })
+        })
+        .then(response => {
+            if (response.ok) {
+                // Reload the page after accepting
+                window.location.reload();
+            } else {
+                // Handle error response
+                console.error('Failed to accept espacepartenaire');
+            }
+        })
+        .catch(error => {
+            console.error('Error accepting espacepartenaire:', error);
+        });
+    }
+</script>
+
+{% endblock %}

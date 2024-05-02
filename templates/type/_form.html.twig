@@ -1,0 +1,51 @@
+{# Your Twig template #}
+
+<style>
+    /* Custom form styles */
+    .needs-validation {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    /* Custom styles for form inputs */
+    .needs-validation input[type="text"],
+    .needs-validation textarea,
+    .needs-validation select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+
+    /* Custom styles for choice label */
+    .needs-validation label {
+        display: block; /* Ensures labels appear on new lines */
+        margin-bottom: 5px; /* Adjust spacing between labels and inputs */
+        font-weight: bold; /* Example: make labels bold */
+    }
+
+    /* Custom styles for radio buttons */
+    .needs-validation input[type="radio"] {
+        /* Example styles: */
+        margin-right: 5px; /* Adjust spacing between radio buttons */
+        vertical-align: middle; /* Align radio buttons vertically with labels */
+    }
+
+    /* Custom styles for the submit button */
+    .btn {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px; /* Adjust spacing between button and other elements */
+    }
+</style>
+
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

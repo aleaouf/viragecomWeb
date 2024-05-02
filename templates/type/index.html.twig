@@ -1,0 +1,39 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block title %}Types{% endblock %}
+
+{% block body %}
+<div style="padding-top: 200px" class="container">
+    <h1>Types</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id type</th>
+                <th>Nom de type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if types is not empty %}
+                {% for type in types %}
+                    <tr>
+                        <td>{{ type.idType }}</td>
+                        <td>{{ type.nomtype }}</td>
+                        <td>
+                            <a href="{{ path('app_type_show', {'idType': type.idType}) }}" class="btn btn-primary">Show</a>
+                            <a href="{{ path('app_type_edit', {'idType': type.idType}) }}" class="btn btn-info">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No records found</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_type_new') }}" class="btn btn-success">Create New</a>
+</div>
+{% endblock %}
