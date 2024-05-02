@@ -3,7 +3,7 @@
 {% block body %}
 
     {% if app.user %}
-        <div style="padding-top: 200px" class="container">
+        <div style="padding-top: 100px" class="container">
             <h1>Welcome, {{ app.user.nom ?? 'User' }} {{ app.user.prenom ?? '' }}!</h1>
             <p>You are logged in as {{ app.user.role ?? 'Role' }}.</p>
             <p>Your email address: {{ app.user.email ?? 'Email' }}</p>
