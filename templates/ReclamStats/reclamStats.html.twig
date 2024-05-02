@@ -1,0 +1,161 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reclamations Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <style>
+        /* CSS styles for the chart containers */
+        .chart-container {
+            width: 400px; /* Adjust the width as needed */
+            height: 400px; /* Adjust the height as needed */
+            margin: 20px; /* Add margin between charts */
+            border: 1px solid #ccc; /* Optional: Add a border for visual separation */
+            padding: 10px; /* Add padding for spacing */
+            float: left; /* Float the charts next to each other */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chart-container">
+        <canvas id="reclamationsPieChart"></canvas>
+    </div>
+
+
+
+    <div class="chart-container">
+        <canvas id="averageTimeBarChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="reclamationsTypeChart"></canvas>
+    </div>
+
+    <script>
+
+        // Pie chart data
+       const data = {{ data|raw }};
+
+        const labels = data.map(item => item.label);
+        const values = data.map(item => item.value);
+
+        const config = {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Reclamations by Status',
+                    data: values,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Allow chart to adjust to container size
+            }
+        };
+
+
+//piechartType
+
+       const data1 = {{ data1|raw }};
+
+        const labels1 = data1.map(item => item.label);
+        const values1 = data1.map(item => item.value);
+
+        const config1 = {
+            type: 'pie',
+            data: {
+                labels: labels1,
+                datasets: [{
+                    label: 'Reclamations by Type',
+                    data: values1,
+                    backgroundColor: [
+                        'rgba(170, 99, 42, 0.5)',
+                        'rgba(80, 162, 235, 0.5)',
+                        'rgba(150, 250, 86, 0.5)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Allow chart to adjust to container size
+            }
+        };
+
+        
+
+         // Parse the series data from Symfony
+        const seriesData = JSON.parse('{{ series|raw }}');
+
+        // Bar chart data
+        const barLabels = seriesData.map(item => item.type);
+        const barValues = seriesData.map(item => item.averageDays);
+
+        const barData = {
+            labels: barLabels,
+            datasets: [{
+                label: 'Average Time (days)',
+                data: barValues,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        };
+   
+
+        // Create the charts
+       
+        var reclamationsPieChart = new Chart(
+            document.getElementById('reclamationsPieChart'),
+            config
+        );
+
+         var reclamationsTypeChart = new Chart(
+            document.getElementById('reclamationsTypeChart'),
+            config1
+        );
+
+        var barChart = new Chart(
+            document.getElementById('averageTimeBarChart'),
+            { 
+                type: 'bar', 
+                data: barData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Allow chart to adjust to container size
+                    scales: {
+                        y: {
+                            beginAtZero: true // Start y-axis from zero
+                        }
+                    }
+                }
+            }
+        );
+    </script>
+</body>
+</html>
+{% endblock %}
+
+

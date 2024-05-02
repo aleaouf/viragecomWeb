@@ -1,0 +1,12 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block title %}New Reponse{% endblock %}
+
+{% block body %}
+    <h1>Reponse a la reclamation :{{reponse.idReclamation.idReclamation}}</h1>
+    <br></br>
+    
+
+    {{ include('reponse/_form.html.twig') }}
+
+{% endblock %}

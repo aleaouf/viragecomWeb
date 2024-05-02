@@ -1,0 +1,51 @@
+{% extends 'base.backoffice.html.twig' %}
+
+
+{% block title %}Reponse index{% endblock %}
+
+{% block body %}
+    <h1>Reponse index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdReponse</th>
+                <th>IdReclamation</th>
+                <th>Contenu</th>
+                <th>DateRep</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reponse in reponses %}
+            <tr>
+                <td>{{ reponse.idReponse }}</td>
+                <td>{{ reponse.idReclamation.idReclamation }}</td>
+                <td>{{ reponse.contenu }}</td>
+                <td>{{ reponse.dateRep ? reponse.dateRep|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_reponse_edit', {'idReponse': reponse.idReponse}) }}" class="btn btn-success">modifier</a>
+                    <br></br>
+                    <a href="{{ path('app_reponse_delete', {'idReponse': reponse.idReponse}) }}" onclick="deleteAndRefresh(event, '{{ path('app_reponse_delete', {'idReponse': reponse.idReponse}) }}')" class="btn btn-danger">supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function deleteAndRefresh(event, deleteUrl) {
+            event.preventDefault(); // Prevent the default behavior of the link
+            if (confirm('Are you sure you want to delete this record?')) {
+                // Perform the delete operation via AJAX or simply redirect
+                // Here we're redirecting to the delete URL and then refreshing the page
+                window.location.href = deleteUrl;
+                window.location.reload();
+            }
+        }
+    </script>
+{% endblock %}

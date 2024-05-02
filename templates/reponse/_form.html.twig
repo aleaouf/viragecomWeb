@@ -1,0 +1,62 @@
+<style>
+
+.invalid-feedback {
+        color: #dc3545;  
+        display: block;
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important; 
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+     .form-control, .form-select {
+        border-color: #89c048;
+        border-radius: 0.25rem; 
+    }
+  
+    .needs-validation {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+   
+    .needs-validation input[type="text"],
+    .needs-validation textarea,
+    .needs-validation select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+
+   
+    .needs-validation label {
+        display: block; 
+        margin-bottom: 5px; 
+        font-weight: bold; 
+    }
+
+   
+    .needs-validation input[type="radio"] {
+        margin-right: 5px; 
+        vertical-align: middle; 
+    }
+
+    .btn {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px; 
+    }
+</style>
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <br></br>
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+{{ form_end(form) }}
