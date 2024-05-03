@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Reactions;
 use App\Repository\ReactionsRepository;
+use Symfony\Component\Security\Core\Security;
 
 
 
@@ -36,34 +37,41 @@ class ArticlesController extends AbstractController
 
     
     #[Route('/react-to-article', name: 'app_react_to_article')]
-    public function reactToArticle(Request $request, EntityManagerInterface $entityManager, ReactionsRepository $reactionsRepository): Response
-    {
-        // Récupérer les données du formulaire AJAX
-        $articleId = $request->request->get('article_id');
-        $reactionType = $request->request->get('reaction_type');
-        $userId = 7; // Remplacez 7 par l'ID de l'utilisateur connecté
-    
-        // Vérifier si l'utilisateur a déjà réagi à cet article
-        $existingReaction = $reactionsRepository->findOneBy(['idArticle' => $articleId, 'idUser' => $userId]);
-    
-        if ($existingReaction) {
-            // Si l'utilisateur a déjà réagi, mettre à jour sa réaction
-            $existingReaction->setTypeReact($reactionType);
-        } else {
-            // Sinon, enregistrer la nouvelle réaction dans la base de données
-            $reaction = new Reactions();
-            $reaction->setIdArticle($articleId);
-            $reaction->setIdUser($userId);
-            $reaction->setTypeReact($reactionType);
-    
-            $entityManager->persist($reaction);
-        }
-    
-        $entityManager->flush();
-    
-        // Vous pouvez renvoyer une réponse JSON avec un message de succès si nécessaire
-        return new JsonResponse(['message' => 'Réaction enregistrée avec succès.']);
+public function reactToArticle(Request $request, EntityManagerInterface $entityManager, ReactionsRepository $reactionsRepository, Security $security): Response
+{
+    // Récupérer les données du formulaire AJAX
+    $articleId = $request->request->get('article_id');
+    $reactionType = $request->request->get('reaction_type');
+
+    // Obtenir l'ID de l'utilisateur connecté
+    $user = $security->getUser();
+    if (!$user) {
+        throw new \Exception('Utilisateur non authentifié.');
     }
+    $userId = $user->getId(); // Récupère l'ID de l'utilisateur connecté
+
+    // Vérifier si l'utilisateur a déjà réagi à cet article
+    $existingReaction = $reactionsRepository->findOneBy(['idArticle' => $articleId, 'idUser' => $userId]);
+
+    if ($existingReaction) {
+        // Si l'utilisateur a déjà réagi, mettre à jour sa réaction
+        $existingReaction->setTypeReact($reactionType);
+    } else {
+        // Sinon, enregistrer la nouvelle réaction dans la base de données
+        $reaction = new Reactions();
+        $reaction->setIdArticle($articleId);
+        $reaction->setIdUser($userId);
+        $reaction->setTypeReact($reactionType);
+
+        $entityManager->persist($reaction);
+    }
+
+    $entityManager->flush();
+
+    // Vous pouvez renvoyer une réponse JSON avec un message de succès si nécessaire
+    return new JsonResponse(['message' => 'Réaction enregistrée avec succès.']);
+}
+
 
     #[Route('/search', name: 'app_search_articles', methods: ['GET'])]
     public function searchArticle(Request $request, ArticlesRepository $articlesRepository): Response
