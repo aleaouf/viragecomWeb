@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Form;
-
+use App\Form\TextareaType;
 use App\Entity\Espacepartenaire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
