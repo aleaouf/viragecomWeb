@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ArticlesRepository;
 use Symfony\Component\Security\Core\Security;
-
+use Twilio\Rest\Client;
 #[Route('/panier')]
 class PanierController extends AbstractController
 {
@@ -31,15 +31,22 @@ class PanierController extends AbstractController
         // Assuming $accountSid and $authToken are defined elsewhere
 
         // Retrieve logged-in user (assuming you need this here)
-        $client = new Client($accountSid, $authToken);
 
-    $message = $client->messages->create(
-    '+21654821391', // replace with admin's phone number
-    [
-        'from' => '+14845280278', // replace with your Twilio phone number
-        'body' => 'votre commande a été traité ' ,
-    ]
-                );
+   // '+21654821391', // replace with admin's phone number
+    
+                $accountSid = $_ENV['TWILIO_ACCOUNT_SID'];
+                $authToken = $_ENV['TWILIO_AUTH_TOKEN'];
+                $twilioPhoneNumber = $_ENV['TWILIO_NUMBER'];
+        
+                $twilio = new Client($accountSid, $authToken);
+                $message = $twilio->messages
+                ->create(
+                    "+21624327573", // Destination phone number from the form
+                    [
+                        'from' => $twilioPhoneNumber, // Your Twilio phone number
+                        'body' => "votre commande a été traité"
+                    ]
+                );       
         $user = $this->security->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour commander.');
