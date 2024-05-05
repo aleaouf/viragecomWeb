@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Form;
-
+use App\Form\TextareaType;
 use App\Entity\Espacepartenaire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -30,7 +30,7 @@ class EspacepartenaireType extends AbstractType
                 'required' => false,
             ])
             
-            ->add('description', TextareaType::class, [ // Use TextareaType for multiline text
+            ->add('description',TextType  ::class, [ // Use TextareaType for multiline text
                 'label' => 'Description',
                 'attr' => [
                     'rows' => 6, // Set initial rows (height) of the textarea
