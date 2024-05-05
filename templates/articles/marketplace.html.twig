@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}marketplace{% endblock %}
+{% block title %}Marketplace{% endblock %}
 
 {% block body %}
 <section class="breadcrumbs">
     <div class="container">
-        <h1>marketplace</h1>
+        <h1>Marketplace</h1>
         <!-- Barre de recherche -->
         <form id="searchForm">
             <div class="input-group">
@@ -29,10 +29,9 @@
     {% for article in articles %}
     <div class="col-md-4 mb-4">
         <div class="card h-100">
-            
             {% if article.image %}
                 <img class="card-img-top img-fluid" src="{{ asset('uploads/' ~ article.image) }}" alt="">
-                   {% endif %}
+            {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ article.nom }}</h5>
                 <p class="card-text">{{ article.description }}</p>
@@ -57,22 +56,11 @@
     </div>
     {% endfor %}
 </div>
-<div class="row">
-    {# Afficher les articles paginés #}
-    {% for article in articles %}
-        <!-- Affichage des articles -->
-    {% else %}
-        <div class="col-12">
-            <p class="text-center">Aucun article trouvé.</p>
-        </div>
-    {% endfor %}
-</div>
 
 {# Afficher les liens de pagination #}
 <div class="pagination">
     {{ knp_pagination_render(articles) }}
 </div>
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -88,6 +76,8 @@
                 },
                 success: function (response) {
                     $('#searchResults').html(response);
+                    // Rafraîchir la pagination après la recherche
+                    refreshPagination();
                 },
                 error: function () {
                     $('#searchResults').html('<p>Erreur lors de la recherche.</p>');
@@ -123,6 +113,21 @@
                 },
                 error: function () {
                     alert('Erreur lors de la réaction à l\'article.');
+                }
+            });
+        }
+
+        function refreshPagination() {
+            // Rechargez la pagination en utilisant l'URL actuelle
+            $.ajax({
+                url: window.location.href,
+                type: 'GET',
+                success: function (response) {
+                    // Remplacez le contenu paginé actuel par le nouveau contenu
+                    $('.pagination').html($(response).find('.pagination').html());
+                },
+                error: function () {
+                    console.log('Erreur lors de la récupération de la pagination.');
                 }
             });
         }

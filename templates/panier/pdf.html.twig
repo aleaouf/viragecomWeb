@@ -1,55 +1,97 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th>IdPanier</th>
-            <th>IdUser</th>
-            <th>NbrArticle</th>
-            <th>IdArticle</th>
-            <th>Prix</th> <!-- Nouvelle colonne pour le prix -->
-            <th>Image</th>
-            
-        </tr>
-    </thead>
-    <tbody>
-        {% for panier in paniers %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #333;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Marketplace Report</h1>
+        <img src="logo.png" alt="Company Logo" class="logo">
+    </div>
+    <table>
+        <thead>
             <tr>
-                <td>{{ panier.idPanier }}</td>
-                <td>{{ panier.idUser }}</td>
-                <td>{{ panier.nbrArticle }}</td>
-                <td>{{ panier.idArticle }}</td>
-                <td>
-                    {% set article = articles[panier.idPanier] %}
-                    {% if article %}
-                        {{ article.prix }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-                <td>
-                    {% if article %}
-                        <img src="{{ asset('uploads/' ~ article.image) }}" alt="{{ article.nom }}" class="img-fluid" width="100">
-                    {% else %}
-                        N/A
-                    {% endif %}
-                </td>
-                <!-- Vous pouvez ajouter d'autres colonnes ici si nécessaire -->
+                <th>IdPanier</th>
+                <th>IdUser</th>
+                <th>NbrArticle</th>
+                <th>IdArticle</th>
+                <th>Prix</th>
+                <th>Image</th>
             </tr>
-        {% else %}
+        </thead>
+        <tbody>
             <tr>
-                <td colspan="7">Aucun enregistrement trouvé</td>
+                <td>1</td>
+                <td>1001</td>
+                <td>3</td>
+                <td>101</td>
+                <td>50</td>
+                <td><img src="product1.jpg" alt="Product 1"></td>
             </tr>
-        {% endfor %}
-        <!-- Afficher la somme totale du panier avant la remise -->
-        <tr>
-            <td colspan="7">Somme totale du panier avant la remise: {{ totalPrice }} €</td>
-        </tr>
-        <!-- Afficher le montant de la remise -->
-        <tr>
-            <td colspan="7">Remise: {{ discount }} €</td>
-        </tr>
-        <!-- Afficher la somme totale du panier après la remise -->
-        <tr>
-            <td colspan="7">Somme totale du panier après la remise: {{ totalPrice - discount }} €</td>
-        </tr>
-    </tbody>
-</table>
+            <tr>
+                <td>2</td>
+                <td>1002</td>
+                <td>2</td>
+                <td>102</td>
+                <td>40</td>
+                <td><img src="product2.jpg" alt="Product 2"></td>
+            </tr>
+            <!-- Add more rows here if needed -->
+        </tbody>
+    </table>
+    <div class="footer">
+        Page 1 of 1
+    </div>
+</body>
+</html>
