@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espacepartenaire index{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .active-sort {
+            background-color: green;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div style="padding-top: 10px" class="container">
+    <div id="wrapper">
+        <div id="main">
+            <div class="inner">
+                <!-- Services -->
+                <section class="services">
+                    <div class="container-fluid">
+                        <div class="row">
+                            {% for evenement in pagination %}
+                                <div class="col-md-4">
+                                    <div class="card h-100">
+                                        {% if evenement.idEspace.photos %}
+                                            <img class="card-img-top" src="{{ asset('uploads/images/' ~ evenement.idEspace.photos) }}" alt="">
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">Nom d'evenement: {{ evenement.nomEvent }}</h5>
+                                            <p class="card-text"> Date d'evenement: {{ evenement.dateEvent }}</p>
+                                            <p class="card-text"> Capacite: {{ evenement.capacite }}</p>
+                                            <p class="card-text">
+                                                {% if evenement.description is not null %}
+                                                    Description: {{ evenement.description }}
+                                                {% else %}
+                                                    Description: N/A
+                                                {% endif %}
+                                            </p>
+                                            <div class="actions">
+                                                <a href="{{ path('app_reservation_index') }}" class="btn btn-primary">Reserver</a>
+                                                <a href="{{ path('app_espacepartenaire_usershow', {'idEspace': evenement.idEspace.idEspace}) }}" 
+                                                   class="btn btn-primary"
+                                                   onclick="incrementClickCount('{{ evenement.idEspace.idEspace }}')">Localisation d'evenement </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>  
+    </div>
+</div>
+
+<script>
+    function incrementClickCount(idEspace) {
+        const url = '{{ path('espacepartenaire_increment_click', {'id': 'idEspacePlaceholder'}) }}'.replace('idEspacePlaceholder', idEspace);
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('nbclick updated:', data.nbclick);
+            // Optionally, update UI with the new nbclick value
+        })
+        .catch(error => {
+            console.error('Error updating nbclick:', error);
+        });
+    }
+</script>
+{% endblock %}

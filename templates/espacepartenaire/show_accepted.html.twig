@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block body %}
-<div style="padding-top: 150px" class="container">
+<div style="padding-top: 80px" class="container">
     <div id="wrapper">
         <div id="main">
             <div class="inner">
@@ -51,7 +51,7 @@
     </div>
 
     <!-- "Sort by Popularity" button -->
-    <div style="position: absolute; top: 250px; left: 30px;">
+    <div style="position: absolute; top: 200px; left: 30px;">
         <form id="sortForm" action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
             <input type="hidden" id="sortInput" name="sort" value="">
             <button type="button" class="btn btn-success" id="sortButton" onclick="toggleSort()">Trier par espace Populaire</button>
@@ -59,7 +59,7 @@
     </div>
 
     <!-- "Reset" button -->
-    <div style="position: absolute; top: 250px; left: 240px;">
+    <div style="position: absolute; top: 200px; left: 240px;">
         <form action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
             <button type="submit" class="btn btn-secondary">Retirer</button>
         </form>
@@ -69,7 +69,7 @@
     {{ knp_pagination_render(acceptedEspacepartenaires) }}
 
     <!-- "I'm a Partner" button -->
-    <div style="position: absolute; top: 200px; right: 30px;">
+    <div style="position: absolute; top: 150px; right: 30px;">
 {# Check if user is authenticated #}
 {% if app.user %}
     {% set userRole = app.user.role %}
@@ -89,7 +89,7 @@
     <p>You need to be logged in to access this feature.</p>
 {% endif %}  </div>
     <!-- Search input -->
-    <div style="position: absolute; top: 200px; left: 30px;">
+    <div style="position: absolute; top: 150px; left: 30px;">
         <form action="{{ path('app_espacepartenaire_show_accepted') }}" method="get">
             <input type="text" name="query" placeholder="Search by name or type..." value="{{ app.request.get('query') }}">
             <button type="submit">Search</button>

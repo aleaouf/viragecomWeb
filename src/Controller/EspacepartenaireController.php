@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Evenement;
+use App\Form\EvenementType;
+use App\Repository\EvenementRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -163,7 +165,7 @@ class EspacepartenaireController extends AbstractController
     }
 
     #[Route('/notreEspace/{idEspace}', name: 'app_espacepartenaire_usershow', methods: ['GET'])]
-    public function showEspacepartenaire(Espacepartenaire $espacepartenaire): Response
+    public function showEspacepartenaire(Espacepartenaire $espacepartenaire,Evenement $evenement): Response
     {
         return $this->render('espacepartenaire/usershow.html.twig', [
             'espacepartenaire' => $espacepartenaire,
