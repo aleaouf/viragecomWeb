@@ -1,0 +1,14 @@
+{# templates/reservation/show_qr_code.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservation Details{% endblock %}
+
+{% block body %}
+    <h1>Reservation Details</h1>
+    <p>Nom: {{ reservation.nomUser }}</p>
+    <p>Prenom: {{ reservation.prenomUser }}</p>
+    <p>Age: {{ reservation.age }}</p>
+    <h2>QR Code</h2>
+    <img src="{{ qrCode|raw }}" alt="Reservation QR Code">
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.backoffice.html.twig' %}
+
+{% block title %}New Evenement{% endblock %}
+
+{% block body %}
+<div  style="padding-top: 200px;" class="container">
+    <h1>Create new Evenement</h1>
+     {% for flashMessage in app.flashes('warning') %}
+        <div class="alert alert-warning" role="alert">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+
+    {{ include('evenement/_form.html.twig') }}
+
+    <a href="{{ path('app_evenement_index') }}">back to list</a>
+    <div>
+{% endblock %}
