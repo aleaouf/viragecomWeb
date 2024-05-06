@@ -154,6 +154,7 @@ public function reactToArticle(Request $request, EntityManagerInterface $entityM
 
             return $this->redirectToRoute('app_articles_index', [], Response::HTTP_SEE_OTHER);
         }
+        
 
         return $this->renderForm('articles/new.html.twig', [
             'article' => $article,
