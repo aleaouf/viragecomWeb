@@ -165,7 +165,7 @@ class EspacepartenaireController extends AbstractController
     }
 
     #[Route('/notreEspace/{idEspace}', name: 'app_espacepartenaire_usershow', methods: ['GET'])]
-    public function showEspacepartenaire(Espacepartenaire $espacepartenaire,Evenement $evenement): Response
+    public function showEspacepartenaire(Espacepartenaire $espacepartenaire): Response
     {
         return $this->render('espacepartenaire/usershow.html.twig', [
             'espacepartenaire' => $espacepartenaire,
