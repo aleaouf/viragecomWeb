@@ -139,13 +139,16 @@ public function reactToArticle(Request $request, EntityManagerInterface $entityM
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $file = $form['image']->getData();
-            if ($file) {
-                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
-                $file->move($this->getParameter('my_images_directory'), $fileName);
-                $article->setImage($fileName);
+        
+            $article = $form->get('article')['image']->getData();
+            if ($article) {
+                $newFilename = uniqid().'.'.$article->guessExtension();
+                $photo->move(
+                    $this->getParameter('my_images_directory'),
+                    $newFilename
+                );
+                $article->setImage($newFilename);
             }
-
             $entityManager->persist($article);
             $entityManager->flush();
 
